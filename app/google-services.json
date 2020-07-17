@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "288095601989",
+    "firebase_url": "https://project-22852.firebaseio.com",
+    "project_id": "project-22852",
+    "storage_bucket": "project-22852.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288095601989:android:c57ba602abfd4a06f1ea2c",
+        "android_client_info": {
+          "package_name": "org.techtown.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288095601989-4f9eimruujn187vimf23ba24i01vqppl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.techtown.project",
+            "certificate_hash": "1fe52beb24ba2ab0dfd2e288c2daf18870799c56"
+          }
+        },
+        {
+          "client_id": "288095601989-2u265o9vs4cfuee0k5k9bsr01ru14l83.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMSTCadY6n0CiHdirsloDsVAJzkuJpV38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "288095601989-2u265o9vs4cfuee0k5k9bsr01ru14l83.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
