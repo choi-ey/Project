@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_mypage"
+        android:title="마이페이지"
+        android:visible="false"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/action_setting"
+        android:title="설정"
+        android:visible="false"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/action_setting2"
+        android:title="설정2"
+        android:icon="@drawable/menu_settings"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        />
+    <!--   android:icon="@drawable/menu_settings" -->
+    <item
+        android:id="@+id/searchView"
+        android:title="검색"
+
+        android:visible="false"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />
+</menu>
