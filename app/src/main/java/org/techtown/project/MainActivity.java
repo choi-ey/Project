@@ -1,14 +1,135 @@
 package org.techtown.project;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    Toolbar toolbar;
+    //햄버거 메뉴
+    private DrawerLayout mDrawerLayout;
+    //이름 불러와서 저장하기 위함
+    TextView name; //drawer_header.xml의 TextView
+    TextView email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        //홈키에 햄버거 메뉴 이미지 설정
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("main");
+        //bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.tab_home:
+                                Toast.makeText(getApplicationContext(),"Home",Toast.LENGTH_LONG).show();
+                                //프래그먼트 사용시 교재 333p
+                                return true;
+                            case R.id.tab_search:
+                                Toast.makeText(getApplicationContext(),"Search",Toast.LENGTH_LONG).show();
+                                return true;
+                            case R.id.tab_favorite:
+                                Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_LONG).show();
+                                return true;
+                            case R.id.tab_plan:
+                                Toast.makeText(getApplicationContext(),"Plan",Toast.LENGTH_LONG).show();
+                                return true;
+                            case R.id.tab_account:
+                                Toast.makeText(getApplicationContext(),"Account",Toast.LENGTH_LONG).show();
+                                return true;
+                        }
+                        return false;
+                    }
+                }
+        );
+        //햄버거 메뉴 사용
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        //헤더뷰의 이름을 바꾸는 방법
+        final View view = navigationView.getHeaderView(0);
+        name = view.findViewById(R.id.name);
+        //name.setText("이민지");
+        //이메일도 같은 방식으로 바꾸기
+        email = view.findViewById(R.id.email);
+        //이미지뷰 받아오기
+        //햄버거 메뉴 누를 시
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                int id = item.getItemId();
+                switch (id){
+                    case R.id.mypage:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        Intent mypageIntent = new Intent(MainActivity.this,MypageActivity.class);
+                        //이름 마이페이지에 보내기
+                        mypageIntent.putExtra("name",name.getText().toString());
+                        //이메일도 보내기
+                        mypageIntent.putExtra("email",email.getText().toString());
+                        startActivity(mypageIntent);
+                        break;
+                    case R.id.alert:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.gps:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.logout:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.out:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //기본 toolBar 설정
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        //햄버거메뉴 누르면 창 띄우기
+        switch (id){
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
