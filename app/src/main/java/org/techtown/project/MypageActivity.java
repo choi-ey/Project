@@ -7,6 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,8 @@ public class MypageActivity extends AppCompatActivity {
     public ExpandableListView listView; //ExpandableListView 변수선언
     public ExpandableListViewAdapter adapter;
     public ArrayList<Parent> listParent;
+
+    FirebaseAuth firebaseAuth;
 
     ActionBar actionBar;
     Toolbar toolbar;
@@ -93,10 +99,10 @@ public class MypageActivity extends AppCompatActivity {
                         Toast.makeText(MypageActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
                         break;
                     case R.id.logout:
-                        Toast.makeText(MypageActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        ((MainActivity) MainActivity.mContext).logout();
                         break;
                     case R.id.out:
-                        Toast.makeText(MypageActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        deleteuser();
                         break;
                 }
                 return true;
@@ -254,4 +260,26 @@ public class MypageActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    //회원탈퇴하고 로그인페이지로 이동하는 함수
+    public void deleteuser(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MypageActivity.this);
+        builder.setTitle("회원탈퇴");
+        builder.setMessage("정말 회원탈퇴를 하시겠습니까?");
+        builder.setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebaseAuth.getCurrentUser().delete();
+                        Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(MypageActivity.this, "회원탈퇴가 성공적으로 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        builder.show();
+    }
+
 }
