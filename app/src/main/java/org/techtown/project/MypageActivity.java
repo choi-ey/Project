@@ -34,6 +34,9 @@ public class MypageActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     TextView name;
     TextView email;
+    //네비게이션뷰
+    TextView navName;
+    TextView navEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,11 @@ public class MypageActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+        //헤더뷰의 이름을 바꾸는 방법
+        final View view = navigationView.getHeaderView(0);
+        navName = view.findViewById(R.id.name);
+        navEmail = view.findViewById(R.id.email);
+
         //이름 받아오기
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
@@ -60,6 +68,9 @@ public class MypageActivity extends AppCompatActivity {
         String mEmail = intent.getExtras().getString("email");
         name.setText(mName);
         email.setText(mEmail);
+        //네비게이션
+        navName.setText(mName);
+        navEmail.setText(mEmail);
         //이메일 받아오기
         //사진 받아오기
         //설정메뉴
