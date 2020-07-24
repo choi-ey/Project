@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,10 +29,14 @@ public class MainActivity extends AppCompatActivity {
     TextView name; //drawer_header.xml의 TextView
     TextView email;
 
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,8 +82,12 @@ public class MainActivity extends AppCompatActivity {
         final View view = navigationView.getHeaderView(0);
         name = view.findViewById(R.id.name);
         //name.setText("이민지");
+
         //이메일도 같은 방식으로 바꾸기
         email = view.findViewById(R.id.email);
+        String Email=getIntent().getStringExtra("email");
+        email.setText(Email);
+
         //이미지뷰 받아오기
         //햄버거 메뉴 누를 시
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -103,10 +113,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
                         break;
                     case R.id.logout:
-                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        logout();
                         break;
                     case R.id.out:
-                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        deleteuser();
                         break;
                 }
                 return true;
@@ -131,5 +141,20 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //로그아웃하고 로그인 페이지로 이동하는 함수
+    private void logout(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        Toast.makeText(MainActivity.this, "로그아웃 완료", Toast.LENGTH_SHORT).show();
+    }
+    //회원탈퇴하고 로그인페이지로 이동하는 함수
+    private void deleteuser(){
+        firebaseAuth.getCurrentUser().delete();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        Toast.makeText(MainActivity.this, "회원탈퇴가 성공적으로 완료되었습니다.", Toast.LENGTH_SHORT).show();
     }
 }
