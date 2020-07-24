@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
                         break;
                     case R.id.tag:
-                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, TagActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.logout:
                         logout();
