@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.tab_plan:
                                 Toast.makeText(getApplicationContext(),"Plan",Toast.LENGTH_LONG).show();
                                 return true;
-                            case R.id.tab_account:
-                                Toast.makeText(getApplicationContext(),"Account",Toast.LENGTH_LONG).show();
+                            case R.id.tab_map:
+                                Toast.makeText(getApplicationContext(),"Map",Toast.LENGTH_LONG).show();
                                 return true;
                         }
                         return false;
