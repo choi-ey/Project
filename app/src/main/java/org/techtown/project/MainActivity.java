@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.gps:
                         Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
                         break;
+                    case R.id.tag:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_LONG).show();
+                        break;
                     case R.id.logout:
                         logout();
                         break;

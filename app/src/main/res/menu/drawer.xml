@@ -16,6 +16,9 @@
     <item android:title="회원서비스">
         <menu>
             <item
+                android:id="@+id/tag"
+                android:title="선호태그설정"/>
+            <item
                 android:id="@+id/logout"
                 android:title="로그아웃"/>
             <item
