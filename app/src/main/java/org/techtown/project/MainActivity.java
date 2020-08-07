@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
 
+    Fragment fragmentmap;
+    Fragment fragmentmain;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fragmentmap= new Fragment(R.layout.fragment_gps);
+        fragmentmain=new Fragment();
 
         ActionBar actionBar = getSupportActionBar();
         //홈키에 햄버거 메뉴 이미지 설정
@@ -60,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getItemId()){
                             case R.id.tab_home:
                                 Toast.makeText(getApplicationContext(),"Home",Toast.LENGTH_LONG).show();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.container,fragmentmain).commit();
                                 //프래그먼트 사용시 교재 333p
                                 return true;
                             case R.id.tab_search:
@@ -72,7 +81,10 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"Plan",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.tab_map:
-                                Toast.makeText(getApplicationContext(),"Map",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"map",Toast.LENGTH_LONG).show();
+                                //getSupportFragmentManager().beginTransaction().replace(R.id.container,fragmentmap).commit();
+                                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                                startActivity(intent);
                                 return true;
                         }
                         return false;
@@ -180,5 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         builder.show();
     }
+
+
 
 }
