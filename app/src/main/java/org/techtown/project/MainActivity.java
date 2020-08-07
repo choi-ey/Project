@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragmentmap;
     Fragment fragmentmain;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,13 +79,15 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.tab_plan:
+                                Intent intentP = new Intent(MainActivity.this, PlanActivity.class);
+                                startActivity(intentP);
                                 Toast.makeText(getApplicationContext(),"Plan",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.tab_map:
                                 Toast.makeText(getApplicationContext(),"map",Toast.LENGTH_LONG).show();
                                 //getSupportFragmentManager().beginTransaction().replace(R.id.container,fragmentmap).commit();
-                                Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                                startActivity(intent);
+                                Intent intentM = new Intent(MainActivity.this, MapActivity.class);
+                                startActivity(intentM);
                                 return true;
                         }
                         return false;

@@ -13,10 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value=""/>
 
         <activity android:name=".MapActivity"
             android:parentActivityName=".MainActivity" />
@@ -25,7 +24,8 @@
             android:parentActivityName=".MainActivity" />
 
         <activity android:name=".PlanActivity2" />
-        <activity android:name=".PlanActivity" />
+        <activity android:name=".PlanActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MypageActivity"
             android:parentActivityName=".MainActivity" />

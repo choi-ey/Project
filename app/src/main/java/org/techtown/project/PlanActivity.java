@@ -1,6 +1,9 @@
 package org.techtown.project;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 
 import android.content.Intent;
@@ -19,6 +22,9 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
     int year,monthOfYear,dayOfMonth;
     int yearEnd, monthOfYearEnd,dayOfMonthEnd;
 
+    ActionBar actionBar;
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +32,15 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
 
         txtPlace = findViewById(R.id.txtPlace);
         btnCalendar = findViewById(R.id.btnCalendar);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+
+        actionBar.setTitle("Plan");
+        // actionBar.setIcon(R.drawable.menu_settings);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         btnCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
