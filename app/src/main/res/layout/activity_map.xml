@@ -35,6 +35,21 @@
         android:orientation="horizontal"
         />
 
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_recommand"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="근처 추천장소 보여주기"
+            />
+
+    </LinearLayout>
 
     <fragment
         android:layout_width="match_parent"

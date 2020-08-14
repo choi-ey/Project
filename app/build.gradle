@@ -42,6 +42,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'noman.placesapi:placesAPI:1.1.3'
+
 
 
     //firebase 로그인 지원

@@ -15,15 +15,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     public static Context mContext;
@@ -97,16 +104,33 @@ public class MainActivity extends AppCompatActivity {
         //햄버거 메뉴 사용
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
+        final String currentuser= user.getEmail(); //현재 로그인한 사용자의 이메일 가져오기
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         //헤더뷰의 이름을 바꾸는 방법
         final View view = navigationView.getHeaderView(0);
         name = view.findViewById(R.id.name);
-        //name.setText("이민지");
+
+        DocumentReference docRef=db.collection("User").document(currentuser);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String name11= document.getString("name");
+                        name.setText(name11);
+                    } else { }
+                } else { }
+            }
+        });
+
 
         //이메일도 같은 방식으로 바꾸기
         email = view.findViewById(R.id.email);
-        String Email=getIntent().getStringExtra("email");
-        email.setText(Email);
+        email.setText(currentuser);
 
         //이미지뷰 받아오기
         //햄버거 메뉴 누를 시
@@ -134,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tag:
                         Intent intent = new Intent(MainActivity.this, TagActivity.class);
+                        intent.putExtra("user",currentuser);
                         startActivity(intent);
                         break;
                     case R.id.logout:
