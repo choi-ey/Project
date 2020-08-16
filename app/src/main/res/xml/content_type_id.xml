@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+    <item>
+        <name>관광지</name>
+        <code>12</code>
+    </item>
+    <item>
+        <name>문화시설</name>
+        <code>14</code>
+    </item>
+    <item>
+        <name>축제/공연/행사</name>
+        <code>15</code>
+    </item>
+    <item>
+        <name>레포츠</name>
+        <code>28</code>
+    </item>
+    <item>
+        <name>음식</name>
+        <code>39</code>
+    </item>
+</items>

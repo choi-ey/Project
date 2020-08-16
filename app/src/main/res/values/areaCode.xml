@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="지역">
+        <item>
+            <name>서울</name>
+        </item>
+        <item>
+            <name>인천</name>
+        </item>
+        <item>
+            <name>대전</name>
+        </item>
+        <item>
+            <name>대구</name>
+        </item>
+        <item>
+            <name>광주</name>
+        </item>
+        <item>
+            <name>부산</name>
+        </item>
+        <item>
+            <name>울산</name>
+        </item>
+        <item>
+            <name>세종특별자치시</name>
+        </item>
+        <item>
+            <name>경기도</name>
+        </item>
+    </string-array>
+</resources>
