@@ -36,7 +36,7 @@
             android:background="@color/colorDivision"
             android:orientation="horizontal"
             />
-        <!-- 검색 -->
+        <!-- 검색 --> <!-- frameLayout 안에 MainFragment (검색) -->
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"

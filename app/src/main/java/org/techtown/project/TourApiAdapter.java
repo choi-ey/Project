@@ -101,6 +101,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     public int getItemCount() {
         return items.size();
     }
+
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView apiTitle;

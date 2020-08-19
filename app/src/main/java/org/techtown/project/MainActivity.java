@@ -64,25 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     Fragment fragmentmap;
     Fragment fragmentmain;
-    //검색
-    Spinner spinSigungu; //시군구
-    List<String> sigungu = new ArrayList<String>();
-    String sigunguCode;
-    ArrayList<String> sigunguCodes = new ArrayList<String>();
-    String key = "";
-    String data;
 
-    Spinner spinType; // 관광타입 스피너
-    String contentTypeId;
-    ArrayList<String> contentTypeIds = new ArrayList<String>();
-    //8/9 리싸이클러뷰 어댑터
-    RecyclerView recyclerView;
-    TourApiAdapter adapter;
-    ArrayList<TourApi> list = null;
-    TourApi tour = null;
-    //네이버 검색기능
-    String naverSearch;
-    String str;
     MainFragment mainFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

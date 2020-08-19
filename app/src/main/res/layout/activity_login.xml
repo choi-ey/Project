@@ -65,6 +65,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:text="Login"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:theme="@style/ButtonStyle" />
 
         <Button

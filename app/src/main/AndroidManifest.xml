@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WishList"></activity>
+        <activity
+            android:name=".WishList"
+            android:parentActivityName=".MainActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

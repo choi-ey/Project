@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class PlanActivity2 extends AppCompatActivity {
 
@@ -21,6 +25,11 @@ public class PlanActivity2 extends AppCompatActivity {
     private int sDate;
     private int eDate;
     private int month;
+    //8/19 추가
+    DayAdapter adapter;
+    ArrayList<Day> list = null;
+    Day day = null;
+    ArrayList<Memo> sublist = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +63,29 @@ public class PlanActivity2 extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        DayAdapter adapter = new DayAdapter();
 
+        list = new ArrayList<Day>();
+        sublist = new ArrayList<Memo>();
         for(int i = sDate; i <= eDate; i++){
-            adapter.addItem(new Day(month,i));
+            day = new Day();
+            day.setMonth(month);
+            day.setDate(i);
+            list.add(day);
         }
-
+        adapter = new DayAdapter(PlanActivity2.this,list,sublist);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new OnDayItemClickListener() {
+            @Override
+            public void onItemClick(DayAdapter.ViewHolder holder, View view, int position) {
+                Day item = adapter.getItem(position);
+                //첫번째 position 0으로 인식
+                Toast.makeText(PlanActivity2.this,position+"아이템"+item.getDate(),Toast.LENGTH_LONG ).show();
+
+
+            }
+        });
+
 
     }
 }
