@@ -72,7 +72,7 @@ public class PlanActivity2 extends AppCompatActivity {
             day.setDate(i);
             list.add(day);
         }
-        adapter = new DayAdapter(PlanActivity2.this,list,sublist);
+        adapter = new DayAdapter(PlanActivity2.this,list); //,sublist => Memo가 필요없어짐
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnDayItemClickListener() {

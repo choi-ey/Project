@@ -2,6 +2,7 @@ package org.techtown.project;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,12 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     ArrayList<Day> items = new ArrayList<Day>();
     OnDayItemClickListener listener;
     Context mContext;
-    ArrayList<Memo> subItems = null;
+    //ArrayList<Memo> subItems = null;
 
-    public DayAdapter(Context context,ArrayList<Day> items,ArrayList<Memo> subItems){
+    public DayAdapter(Context context,ArrayList<Day> items){
         this.mContext = context;
         this.items = items;
-        this.subItems = subItems;
+        //this.subItems = subItems;
     }
 
     public void addItem(Day item){
@@ -88,8 +89,9 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final DayAdapter.ViewHolder holder, final int position) {
 
         holder.txtDate.setText("Day"+(position+1)+" "+items.get(position).month+"/"+items.get(position).date);
-
-        //메모 잘되면 나중에
+        holder.txtDate.setPaintFlags(holder.txtDate.getPaintFlags()| Paint.FAKE_BOLD_TEXT_FLAG);
+        //장소추가 버튼 (임시-다이얼로그)
+        final List<String> places = new ArrayList<String>();
         holder.plusPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +99,80 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                     //데이터 리스트로부터 아이템 데이터 참조
                     Day item = items.get(position);
                     Toast.makeText(mContext,(position)+"장소추가 버튼 클릭",Toast.LENGTH_LONG).show();
+                    //8/19 추가
+                    AlertDialog.Builder txtad = new AlertDialog.Builder(mContext);
+                    txtad.setTitle("장소");
+                    final EditText editText = new EditText(mContext);
+                    txtad.setView(editText);
+                    //다이얼로그 취소버튼
+                    txtad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    txtad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            String val = editText.getText().toString();
+
+                            final TextView txtPlace = new TextView(mContext);
+                            txtPlace.setText(val);
+
+                            txtPlace.setPadding(10,10,10,10);
+                            txtPlace.setBackgroundResource(R.drawable.txt_custom);
+
+                            places.add(txtPlace.getText().toString());
+                            txtPlace.setTextSize(20);
+                            txtPlace.setId(position);
+                            txtPlace.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(v.isClickable()){
+                                        Toast.makeText(mContext,position+txtPlace.getText().toString(),Toast.LENGTH_SHORT).show();
+                                        AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
+                                        ad.setTitle("장소수정");
+                                        final EditText editText = new EditText(mContext);
+                                        ad.setView(editText);
+                                        String val = places.get(places.indexOf(txtPlace.getText().toString()));//txtPlace.getText().toString();
+                                        editText.setText(val);
+                                        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        ad.setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(mContext,"수정",Toast.LENGTH_SHORT).show();
+                                                int index = places.indexOf(txtPlace.getText().toString());
+                                                String val = editText.getText().toString();
+                                                txtPlace.setText(val);
+                                                //position을 수정해야함 맨앞에것을 수정함
+                                                places.set(index,txtPlace.getText().toString());
+                                                System.out.println(places);
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        ad.show();
+                                    }
+
+                                }
+                            });
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,100);
+                            lp.setMargins(10,10,10,10);
+                            //lp.gravity = Gravity.CENTER;
+                            txtPlace.setLayoutParams(lp);
+                            holder.container.addView(txtPlace);
+                            System.out.println("places: "+places);
+
+                            Toast.makeText(mContext,position+"목록추가",Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    });
+                    txtad.show();
                 }
             }
         });
@@ -106,10 +182,9 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
-                ad.setTitle(position+"메모");
+                ad.setTitle("메모");
                 final EditText editText = new EditText(mContext);
                 ad.setView(editText);
-                //memo 리싸이클러뷰
                 //다이얼로그 취소버튼
                 ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
@@ -134,6 +209,31 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(mContext,position+txt.getText().toString(),Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
+                                ad.setTitle("메모수정");
+                                final EditText editText = new EditText(mContext);
+                                ad.setView(editText);
+                                String val = txts.get(txts.indexOf(txt.getText().toString()));
+                                editText.setText(val);
+                                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                ad.setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(mContext,"수정",Toast.LENGTH_SHORT).show();
+                                        int index = txts.indexOf(txt.getText().toString());
+                                        String val = editText.getText().toString();
+                                        txt.setText(val);
+                                        txts.set(index,txt.getText().toString());
+                                        System.out.println(txts);
+                                        dialog.dismiss();
+                                    }
+                                });
+                                ad.show();
                             }
                         });
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,100);
