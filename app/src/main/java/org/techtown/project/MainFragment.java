@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
     List<String> sigungu = new ArrayList<String>();
     String sigunguCode;
     ArrayList<String> sigunguCodes = new ArrayList<String>();
-    String key = "B2GJhQfD83i4tKa5mhaO4FkC1FL8MWab9QjPQs9dXxwuwAcGllT8uSrmmlAYTNlqDMxvLLCNNQPPAjSilRFKMQ%3D%3D";
+    String key = "";
     String data;
     Spinner spinType;
     String contentTypeId;
@@ -316,8 +316,8 @@ public class MainFragment extends Fragment {
     }
     //8/11 naver검색 ~~~여기부터
     public String getNaverSearch(String naverSearch){
-        String clientId = "SIwSwE5R84HGLro4oUbg";
-        String clientSecret = "guF3bzvCUv";
+        String clientId = "";
+        String clientSecret = "";
         StringBuffer sb = new StringBuffer();
         try {
             String text = URLEncoder.encode(naverSearch,"UTF-8");
