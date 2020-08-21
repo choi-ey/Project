@@ -5,12 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -35,7 +34,7 @@ public class MainFragment extends Fragment {
     List<String> sigungu = new ArrayList<String>();
     String sigunguCode;
     ArrayList<String> sigunguCodes = new ArrayList<String>();
-    String key = "";
+    String key = "B2GJhQfD83i4tKa5mhaO4FkC1FL8MWab9QjPQs9dXxwuwAcGllT8uSrmmlAYTNlqDMxvLLCNNQPPAjSilRFKMQ%3D%3D";
     String data;
     Spinner spinType;
     String contentTypeId;
@@ -317,8 +316,8 @@ public class MainFragment extends Fragment {
     }
     //8/11 naver검색 ~~~여기부터
     public String getNaverSearch(String naverSearch){
-        String clientId = "";
-        String clientSecret = "";
+        String clientId = "SIwSwE5R84HGLro4oUbg";
+        String clientSecret = "guF3bzvCUv";
         StringBuffer sb = new StringBuffer();
         try {
             String text = URLEncoder.encode(naverSearch,"UTF-8");

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     ArrayList<TourApi> items = new ArrayList<TourApi>();
     Context mContext;
     OnTourApiItemClickListener listener;
+    FirebaseAuth firebaseAuth;
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
         this.items = items;
@@ -67,6 +69,15 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         holder.mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+               /* 마커 설정하는건 아래와 같은데 이걸,,,MainFragment에서 어떻게 MapActivity로 끌고가지..............?
+               Marker mapMarker=null;
+               MarkerOptions markOp = new MarkerOptions();
+                markOp.position(new LatLng( Double.parseDouble(mapx),Double.parseDouble(mapy)));
+                markOp.title(title).snippet(addr1); //마커 내용
+                markOp.draggable(true);
+                mapMarker= mMap.addMarker(markOp); */
+
                 Toast.makeText(mContext,mapx+", "+mapy,Toast.LENGTH_SHORT).show();
             }
         });
@@ -84,6 +95,16 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     tourApi.setMapx(mapx);
                     tourApi.setMapy(mapy);
                     tList.add(tourApi);
+
+                    //DB에 추가...!
+                    /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    DocumentReference docRef = db.collection("User").document("현재사용자");
+
+                    ArrayList<Object> wishlist = new ArrayList<>();
+                   wishlist.add(title); wishlist.add(addr1); wishlist.add(imgURL); wishlist.add(mapx); wishlist.add(mapy);
+                   docRef.update("WishList",wishlist); */
+
                     Intent wishIntent = new Intent(v.getContext(),WishList.class); //v.getContext()
 
                     wishIntent.putExtra("tList",tList);

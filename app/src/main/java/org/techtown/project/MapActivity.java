@@ -1,12 +1,5 @@
 package org.techtown.project;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,8 +14,18 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -59,6 +62,7 @@ public class MapActivity extends AppCompatActivity
 
     ActionBar actionBar;
     Toolbar toolbar;
+    String type;
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -69,12 +73,12 @@ public class MapActivity extends AppCompatActivity
     private static final int FASTEST_UPDATE_INTERVAL_MS = 5000; // 5초
 
 
-    // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용됩니다.
+    // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     boolean needRequest = false;
 
 
-    // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
+    // 앱을 실행하기 위해 필요한 퍼미션을 정의
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
 
 
@@ -133,6 +137,30 @@ public class MapActivity extends AppCompatActivity
 
         previous_marker = new ArrayList<Marker>();
 
+        //검색 분류 spinner 사용
+        Spinner spinner= findViewById(R.id.placeType);
+        ArrayAdapter adapter= ArrayAdapter.createFromResource(this,R.array.검색분류,R.layout.support_simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    type= PlaceType.RESTAURANT; }
+                else if (position==1){ type= PlaceType.CAFE; }
+                else if (position==2){ type= PlaceType.BAKERY; }
+                else if (position==3){ type= PlaceType.SHOPPING_MALL; }
+                else if (position==4){ type= PlaceType.MOVIE_THEATER; }
+                else if (position==5){ type= PlaceType.SPA; }
+                else if (position==6){ type= PlaceType.PARK; }
+                else if (position==7){ type= PlaceType.BAR; }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        //검색버튼
         Button button = (Button)findViewById(R.id.btn_recommand);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +224,7 @@ public class MapActivity extends AppCompatActivity
         }
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -341,7 +369,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -363,18 +390,16 @@ public class MapActivity extends AppCompatActivity
         markerOptions.title("현재위치"); //큰글씨
         markerOptions.snippet(markerTitle); //아래 작은글씨
         markerOptions.draggable(true);
-
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
         currentMarker = mMap.addMarker(markerOptions);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng,16);
         mMap.moveCamera(cameraUpdate);
 
     }
-
-
+    
     public void setDefaultLocation() {
-
 
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
@@ -389,10 +414,10 @@ public class MapActivity extends AppCompatActivity
         markerOptions.title(markerTitle);
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         currentMarker = mMap.addMarker(markerOptions);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 18);
         mMap.moveCamera(cameraUpdate);
 
     }
@@ -415,7 +440,6 @@ public class MapActivity extends AppCompatActivity
         return false;
 
     }
-
 
     /*
      * ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -521,10 +545,7 @@ public class MapActivity extends AppCompatActivity
                     if (checkLocationServicesStatus()) {
 
                         Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
-
-
                         needRequest = true;
-
                         return;
                     }
                 }
@@ -593,10 +614,10 @@ public class MapActivity extends AppCompatActivity
 
         new NRPlaces.Builder()
                 .listener(MapActivity.this)
-                .key("")
+                .key("AIzaSyDAfthK5XxCAPni-m4J9PoOwPNsnACbXYI")
                 .latlng(location.latitude, location.longitude)//현재 위치
                 .radius(500) //500 미터 내에서 검색
-                .type(PlaceType.CAFE) //카페 -> 다른 분류로 변경가능
+                .type(type) //
                 .build()
                 .execute();
     }

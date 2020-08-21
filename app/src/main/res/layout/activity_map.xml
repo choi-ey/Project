@@ -38,16 +38,22 @@
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/placeType"
+            android:layout_width="50dp"
+            android:layout_height="44dp"
+            android:layout_weight="3"
+            android:entries="@array/검색분류" />
 
         <Button
             android:id="@+id/btn_recommand"
-            android:layout_width="0dip"
+            android:layout_width="112dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="근처 추천장소 보여주기"
-            />
+            android:text="검색" />
 
     </LinearLayout>
 
