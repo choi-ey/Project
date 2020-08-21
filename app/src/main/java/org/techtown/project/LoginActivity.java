@@ -92,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //자동로그인 설정
+        firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
 
     @Override

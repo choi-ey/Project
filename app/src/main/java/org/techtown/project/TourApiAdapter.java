@@ -1,7 +1,9 @@
 package org.techtown.project;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +83,23 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 Toast.makeText(mContext,mapx+", "+mapy,Toast.LENGTH_SHORT).show();
             }
         });
+        //추가 버튼 (8/20)
+        holder.plusbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,title,Toast.LENGTH_SHORT).show();
+
+                //MainFragment mainFragment = new MainFragment();
+                Intent main = new Intent(mContext,MainActivity.class);
+                //Bundle bundle = new Bundle();
+                ///bundle.putString("title",title);
+                main.putExtra("title",title);
+                //((Activity)mContext).startActivityForResult(plan2,1);
+                v.getContext().startActivity(main);
+                //System.out.println(title+"apiadapter");
+
+            }
+        });
         //좋아요 체크박스 버튼 누르면 하트 채워지고 wishList로 넘어가도록
         holder.heart_check.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +148,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         TextView apiAddr1;
         ImageView imageView;
         Button mapbtn;
+        Button plusbtn;
         CheckBox heart_check;
 
         public ViewHolder(@NonNull View itemView,final OnTourApiItemClickListener listener) {
@@ -138,6 +158,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             apiAddr1 = itemView.findViewById(R.id.apiAddr1);
             imageView = itemView.findViewById(R.id.imageView);
             mapbtn = itemView.findViewById(R.id.mapbtn);
+            plusbtn = itemView.findViewById(R.id.plusbtn);
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
             itemView.setOnClickListener(new View.OnClickListener() {

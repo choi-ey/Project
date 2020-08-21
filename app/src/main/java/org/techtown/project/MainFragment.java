@@ -49,6 +49,7 @@ public class MainFragment extends Fragment {
     Context mContext;
     Button btn;
 
+    String title;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -59,6 +60,13 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
 
+        //8/20 추가버튼
+        /*Bundle arguments = getArguments();
+        if (arguments != null){
+            title = arguments.getString("title");
+        }
+        System.out.println("전달: "+title);*/
+        //
         btn = rootView.findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
