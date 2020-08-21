@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="검색분류">
+        <item>
+            <name>음식점(restaurant)</name>
+        </item>
+        <item>
+            <name>카페(cafe)</name>
+        </item>
+        <item>
+            <name>베이커리(bakery)</name>
+        </item>
+        <item>
+            <name>쇼핑몰(mall)</name>
+        </item>
+        <item>
+            <name>영화관(theater)</name>
+        </item>
+        <item>
+            <name>스파(spa)</name>
+        </item>
+        <item>
+            <name>공원(park)</name>
+        </item>
+        <item>
+            <name>바(bar)</name>
+        </item>
+    </string-array>
+</resources>

@@ -29,12 +29,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.techtown.project.R.string.TourAPI;
+
 public class MainFragment extends Fragment {
     Spinner spinSigungu; //시군구
     List<String> sigungu = new ArrayList<String>();
     String sigunguCode;
     ArrayList<String> sigunguCodes = new ArrayList<String>();
-    String key = "";
+    String key ;
     String data;
     Spinner spinType;
     String contentTypeId;
@@ -59,6 +61,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
+        key = getString(TourAPI);
 
         //8/20 추가버튼
         /*Bundle arguments = getArguments();
@@ -324,8 +327,8 @@ public class MainFragment extends Fragment {
     }
     //8/11 naver검색 ~~~여기부터
     public String getNaverSearch(String naverSearch){
-        String clientId = "";
-        String clientSecret = "";
+        String clientId =getString(R.string.Naver_ID);
+        String clientSecret =getString(R.string.Naver_PW);
         StringBuffer sb = new StringBuffer();
         try {
             String text = URLEncoder.encode(naverSearch,"UTF-8");

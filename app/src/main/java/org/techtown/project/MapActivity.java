@@ -614,7 +614,7 @@ public class MapActivity extends AppCompatActivity
 
         new NRPlaces.Builder()
                 .listener(MapActivity.this)
-                .key("")
+                .key(getString(R.string.googleMap_place))
                 .latlng(location.latitude, location.longitude)//현재 위치
                 .radius(500) //500 미터 내에서 검색
                 .type(type) //

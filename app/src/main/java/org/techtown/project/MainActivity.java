@@ -1,34 +1,23 @@
 package org.techtown.project;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,17 +29,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     public static Context mContext;
 
@@ -61,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     TextView email;
 
     FirebaseAuth firebaseAuth;
-
-    Fragment fragmentmap;
-    Fragment fragmentmain;
 
     MainFragment mainFragment;
     @Override
@@ -80,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentmap= new Fragment(R.layout.fragment_gps);
-        fragmentmain=new Fragment();
-
         ActionBar actionBar = getSupportActionBar();
         //홈키에 햄버거 메뉴 이미지 설정
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -97,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getItemId()){
                             case R.id.tab_home:
                                 Toast.makeText(getApplicationContext(),"Home",Toast.LENGTH_LONG).show();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.container,fragmentmain).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
                                 //프래그먼트 사용시 교재 333p
                                 return true;
                             case R.id.tab_search:
