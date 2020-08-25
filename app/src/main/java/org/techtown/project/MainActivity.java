@@ -41,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     MainFragment mainFragment;
+    String title;
+    public void setString(String title){
+        this.title = title;
+        //System.out.println("MainActivity: "+title); //확인 OK
+        Intent intent = new Intent();
+        intent.putExtra("title",title);
+        setResult(2,intent);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         mainFragment = (MainFragment)manager.findFragmentById(R.id.mainfragment);
 
+        //8/24
+        /*Intent intent = new Intent();
+        intent.putExtra("title","타이틀");
+        setResult(2,intent);
+        finish(); //안됨*/
+        //
 
         firebaseAuth = FirebaseAuth.getInstance();
         mContext = this;
@@ -166,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

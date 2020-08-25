@@ -17,11 +17,11 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".WishList"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/googleMap"/>
+            android:value="@string/googleMap" />
 
         <activity
             android:name=".MapActivity"

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,8 +29,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.techtown.project.R.string.TourAPI;
 
 public class MainFragment extends Fragment {
     Spinner spinSigungu; //시군구
@@ -50,26 +49,32 @@ public class MainFragment extends Fragment {
     String str;
     Context mContext;
     Button btn;
-
-    String title;
+    //8/24
+    //지우기//String title;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
     }
+
+    //안써도 될듯
+    /*@Override
+    public void setArguments(@Nullable Bundle args) {
+        super.setArguments(args);
+        Bundle arguments = this.getArguments();
+        if (arguments != null){
+            title = arguments.getString("title");
+        }
+        System.out.println("MainFragment: "+title); //ok 전달받음
+
+    }*/
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
-        key = getString(TourAPI);
+        key = getString(R.string.TourAPI);
 
-        //8/20 추가버튼
-        /*Bundle arguments = getArguments();
-        if (arguments != null){
-            title = arguments.getString("title");
-        }
-        System.out.println("전달: "+title);*/
-        //
         btn = rootView.findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,8 +332,8 @@ public class MainFragment extends Fragment {
     }
     //8/11 naver검색 ~~~여기부터
     public String getNaverSearch(String naverSearch){
-        String clientId =getString(R.string.Naver_ID);
-        String clientSecret =getString(R.string.Naver_PW);
+        String clientId = getString(R.string.Naver_ID);
+        String clientSecret = getString(R.string.Naver_PW);
         StringBuffer sb = new StringBuffer();
         try {
             String text = URLEncoder.encode(naverSearch,"UTF-8");

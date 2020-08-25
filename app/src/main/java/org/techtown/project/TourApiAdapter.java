@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -88,16 +89,19 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext,title,Toast.LENGTH_SHORT).show();
-
-                //MainFragment mainFragment = new MainFragment();
-                Intent main = new Intent(mContext,MainActivity.class);
-                //Bundle bundle = new Bundle();
-                ///bundle.putString("title",title);
-                main.putExtra("title",title);
+                ((MainActivity)mContext).setString(title);
+                //지우기 여기부터
+                //Intent main = new Intent(mContext,MainActivity.class);
+                //main.putExtra("title",title);
+                //v.getContext().startActivity(main);
+                //8/24
+                /*MainFragment fragment = new MainFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("title",title);
+                fragment.setArguments(bundle);*/
                 //((Activity)mContext).startActivityForResult(plan2,1);
-                v.getContext().startActivity(main);
                 //System.out.println(title+"apiadapter");
-
+                //여기까지
             }
         });
         //좋아요 체크박스 버튼 누르면 하트 채워지고 wishList로 넘어가도록
@@ -121,8 +125,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     DocumentReference docRef = db.collection("User").document("현재사용자");
 
                     ArrayList<Object> wishlist = new ArrayList<>();
-                   wishlist.add(title); wishlist.add(addr1); wishlist.add(imgURL); wishlist.add(mapx); wishlist.add(mapy);
-                   docRef.update("WishList",wishlist); */
+                    wishlist.add(title); wishlist.add(addr1); wishlist.add(imgURL); wishlist.add(mapx); wishlist.add(mapy);
+                    docRef.update("WishList",wishlist); */
 
                     Intent wishIntent = new Intent(v.getContext(),WishList.class); //v.getContext()
 

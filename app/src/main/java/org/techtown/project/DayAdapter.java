@@ -30,6 +30,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     //ArrayList<Memo> subItems = null;
     //8/20
     String title;
+    //8/24
+    Button plusPlace;
+    //LinearLayout container;
+    ArrayList<LinearLayout> layouts = new ArrayList<LinearLayout>();
 
     public DayAdapter(Context context,ArrayList<Day> items){
         this.mContext = context;
@@ -39,6 +43,13 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     //8/20
     public void addTitle(String title){
         this.title = title;
+    }
+    public Button getButton(){
+        return plusPlace;
+    }
+    //8/25
+    public LinearLayout getContainer(int position){
+        return layouts.get(position);
     }
 
     public void addItem(Day item){
@@ -59,9 +70,9 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{ //8/24 static에서 public으로
         TextView txtDate;
-        Button plusPlace;
+        //Button plusPlace;
         Button enterMemo;
         LinearLayout container;
         public ViewHolder(View itemView,final OnDayItemClickListener listener){
@@ -71,6 +82,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             plusPlace = itemView.findViewById(R.id.plusPlace); //장소
             enterMemo = itemView.findViewById(R.id.enterMemo); //메모추가
             container = itemView.findViewById(R.id.container);
+            layouts.add(container);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,14 +106,20 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         return new ViewHolder(itemView,listener);
     }
+    //PlanActivity2에서 실행되면 지워도 될듯
     public void onActivityResult(int requestCode,int resultCode,Intent data){
-
         if(requestCode == 1){
             if(resultCode == 2){
-                String val = data.getExtras().toString();
+                title =data.getStringExtra("title");
                 //TextView txtPlace = new TextView(mContext);
                 //txtPlace.setText(val);
-                Toast.makeText(mContext,val+"dayAdapter",Toast.LENGTH_SHORT).show();
+                /*final TextView txtPlace = new TextView(mContext);
+                txtPlace.setText(title);
+
+                txtPlace.setPadding(10,10,10,10);
+                txtPlace.setBackgroundResource(R.drawable.txt_custom);*/
+
+                Toast.makeText(mContext,title+"dayAdapter",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -111,17 +129,39 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         holder.txtDate.setText("Day"+(position+1)+" "+items.get(position).month+"/"+items.get(position).date);
         holder.txtDate.setPaintFlags(holder.txtDate.getPaintFlags()| Paint.FAKE_BOLD_TEXT_FLAG);
-        final List<String> placeLists = new ArrayList<String>();
-        holder.plusPlace.setOnClickListener(new View.OnClickListener() {
+        //final List<String> placeLists = new ArrayList<String>();
+        plusPlace.setOnClickListener(new View.OnClickListener() { //holder 뺌 8/24
             @Override
             public void onClick(View v) {
+                listener.onItemClick(holder,v,position);
+                //여기부터
                 /*Toast.makeText(mContext,(position)+"장소추가 버튼 클릭",Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = new MainFragment();
                 FragmentManager manager = ((AppCompatActivity)mContext).getSupportFragmentManager();
                 mainFragment = (MainFragment)manager.findFragmentById(R.id.mainfragment);*/
-                Intent mainIntent = new Intent(mContext,MainActivity.class);
-                v.getContext().startActivity(mainIntent);
-                ((Activity)mContext).startActivityForResult(mainIntent,1);
+                ///Intent mainIntent = new Intent(mContext,MainActivity.class);
+                //v.getContext().startActivity(mainIntent);
+                ///((Activity)mContext).startActivityForResult(mainIntent,1);
+                //여기까지 안씀
+                //8/25 //이게 다시 장소추가 눌러야만 작동함
+                /*if(title != null){
+                    final TextView txtPlace = new TextView(mContext);
+                    txtPlace.setText(title);
+
+                    txtPlace.setPadding(10,10,10,10);
+                    txtPlace.setBackgroundResource(R.drawable.txt_custom);
+
+                    placeLists.add(txtPlace.getText().toString());
+                    txtPlace.setTextSize(20);
+                    txtPlace.setId(position);
+
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+                    lp.setMargins(10,10,10,10);
+                    //lp.gravity = Gravity.CENTER;
+                    txtPlace.setLayoutParams(lp);
+                    holder.container.addView(txtPlace);
+                    System.out.println("places: "+placeLists);
+                }*/
 
             }
 
@@ -229,7 +269,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                     }
                 });
 
-
                 ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -280,8 +319,9 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                         lp.setMargins(10,10,10,10);
                         //lp.gravity = Gravity.CENTER;
                         txtMemo.setLayoutParams(lp);
-                        holder.container.addView(txtMemo);
-                        System.out.println("txt: "+memoLists);
+                        //이러면 또 맨아래에만 쌓임 => 해결
+                        holder.container.addView(txtMemo); //holder. 8/25 PlanActivity2로 넘기려고
+                        System.out.println("txtMemo: "+memoLists);
 
                         Toast.makeText(mContext,position+"목록추가",Toast.LENGTH_LONG).show();
                         dialog.dismiss();
