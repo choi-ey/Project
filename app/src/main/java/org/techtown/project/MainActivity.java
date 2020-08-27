@@ -70,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
+        final String currentuser= user.getEmail(); //현재 로그인한 사용자의 이메일 가져오기
+
+        final Bundle bundle= new Bundle();
+        bundle.putString("email",currentuser);
+
         ActionBar actionBar = getSupportActionBar();
         //홈키에 햄버거 메뉴 이미지 설정
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getItemId()){
                             case R.id.tab_home:
                                 Toast.makeText(getApplicationContext(),"Home",Toast.LENGTH_LONG).show();
+                                mainFragment.setArguments(bundle);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
                                 //프래그먼트 사용시 교재 333p
                                 return true;
@@ -114,9 +122,6 @@ public class MainActivity extends AppCompatActivity {
         //햄버거 메뉴 사용
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-        final String currentuser= user.getEmail(); //현재 로그인한 사용자의 이메일 가져오기
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         //헤더뷰의 이름을 바꾸는 방법

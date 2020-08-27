@@ -1,9 +1,7 @@
 package org.techtown.project;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -47,6 +44,17 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         this.listener = listener;
     }
 
+    /*
+    public interface OnItemClickListener{
+        void onItemClick(View v, int position);
+    }
+    private OnItemClickListener mListener = null ;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+    */
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -68,22 +76,21 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         //mapbtn
         final String mapx = items.get(position).mapx;
         final String mapy = items.get(position).mapy;
-        //지도 보여주는 버튼 현재는 좌표만 받아옴
+        //지도 보여주는 버튼
         holder.mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 해당 위치만 보여주기 위한 MapActivity2 실행 기존의 MapActivity와 다름..!
+                Intent map = new Intent(mContext,MapActivity2.class);
+                map.putExtra("mapx",mapx);
+                map.putExtra("mapy",mapy);
+                map.putExtra("title",title);
+                map.putExtra("addr",addr1);
+                v.getContext().startActivity(map);
 
-               /* 마커 설정하는건 아래와 같은데 이걸,,,MainFragment에서 어떻게 MapActivity로 끌고가지..............?
-               Marker mapMarker=null;
-               MarkerOptions markOp = new MarkerOptions();
-                markOp.position(new LatLng( Double.parseDouble(mapx),Double.parseDouble(mapy)));
-                markOp.title(title).snippet(addr1); //마커 내용
-                markOp.draggable(true);
-                mapMarker= mMap.addMarker(markOp); */
-
-                Toast.makeText(mContext,mapx+", "+mapy,Toast.LENGTH_SHORT).show();
             }
         });
+
         //추가 버튼 (8/20)
         holder.plusbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +111,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 //여기까지
             }
         });
+
         //좋아요 체크박스 버튼 누르면 하트 채워지고 wishList로 넘어가도록
         holder.heart_check.setOnClickListener(new View.OnClickListener() {
             @Override

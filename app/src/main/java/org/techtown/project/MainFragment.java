@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,6 +82,14 @@ public class MainFragment extends Fragment {
                 myAsyncTask.execute();
             }
         });
+
+        //MainActivity에서 email정보 넘겨받아오긴 함
+        Bundle extra = getArguments();
+        if(extra != null){
+            String email = extra.getString("email"); //현재 유저 이메일 정보
+        }
+
+
         //8/9 리싸이클러뷰
         recyclerView = rootView.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
