@@ -1,13 +1,12 @@
 package org.techtown.project;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
 
 import java.util.ArrayList;
 
@@ -39,9 +38,12 @@ public class WishList extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         wishRecycler.setLayoutManager(layoutManager);
 
+        /* for문으로 DB에 저장된 내용 불러오기
         Intent intent = getIntent();
         list = (ArrayList<TourApi>)intent.getSerializableExtra("tList");
         System.out.println(list); //지워도 됨
+         */
+
 
         adapter = new TourApiAdapter(WishList.this,list);
         wishRecycler.setAdapter(adapter);

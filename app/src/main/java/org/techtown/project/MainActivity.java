@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Bundle bundle= new Bundle();
         bundle.putString("email",currentuser);
+        mainFragment.setArguments(bundle);
 
         ActionBar actionBar = getSupportActionBar();
         //홈키에 햄버거 메뉴 이미지 설정
@@ -91,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getItemId()){
                             case R.id.tab_home:
                                 Toast.makeText(getApplicationContext(),"Home",Toast.LENGTH_LONG).show();
-                                mainFragment.setArguments(bundle);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
                                 //프래그먼트 사용시 교재 333p
                                 return true;

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +49,7 @@ public class MainFragment extends Fragment {
     String str;
     Context mContext;
     Button btn;
+    String email;
     //8/24
     //지우기//String title;
     @Override
@@ -57,16 +59,16 @@ public class MainFragment extends Fragment {
     }
 
     //안써도 될듯
-    /*@Override
+    @Override
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
         Bundle arguments = this.getArguments();
         if (arguments != null){
-            title = arguments.getString("title");
+            email = arguments.getString("email");
         }
-        System.out.println("MainFragment: "+title); //ok 전달받음
+        System.out.println("MainFragment: "+email); //ok 전달받음
 
-    }*/
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,11 +85,13 @@ public class MainFragment extends Fragment {
             }
         });
 
-        //MainActivity에서 email정보 넘겨받아오긴 함
+
+        /* //MainActivity에서 email정보 넘겨받아오긴 함
         Bundle extra = getArguments();
         if(extra != null){
-            String email = extra.getString("email"); //현재 유저 이메일 정보
-        }
+            email = extra.getString("email"); //현재 유저 이메일 정보
+            System.out.println(email+"출력");
+        } */
 
 
         //8/9 리싸이클러뷰
@@ -303,6 +307,7 @@ public class MainFragment extends Fragment {
             super.onPostExecute(s);
 
             adapter = new TourApiAdapter(getContext(),list);
+            adapter.setEmail(email);
 
             recyclerView.setAdapter(adapter);
             adapter.setOnItemClickListener(new OnTourApiItemClickListener() {

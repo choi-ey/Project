@@ -1,6 +1,8 @@
 package org.techtown.project;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -25,6 +29,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     Context mContext;
     OnTourApiItemClickListener listener;
     FirebaseAuth firebaseAuth;
+    String email;
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
         this.items = items;
@@ -43,6 +48,11 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     public void setOnItemClickListener(OnTourApiItemClickListener listener){
         this.listener = listener;
     }
+    public void setEmail(String email){
+        this.email=email;
+        System.out.println(email+"어댑터");
+    }
+
 
     /*
     public interface OnItemClickListener{
@@ -52,8 +62,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
-    }
-    */
+    } */
+
 
     @NonNull
     @Override
@@ -127,19 +137,30 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     tourApi.setMapy(mapy);
                     tList.add(tourApi);
 
-                    //DB에 추가...!
-                    /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    //DB에 추가...! update말고 계속해서 추가할 수 있도록 수정하라
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("User").document(email);
+                    docRef.update("WishList",tList);
 
-                    DocumentReference docRef = db.collection("User").document("현재사용자");
+                    //알림 다이얼로그
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("추가 완료").setMessage("위시리스트에 해당항목이 추가되었습니다");
+                    builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                    ArrayList<Object> wishlist = new ArrayList<>();
-                    wishlist.add(title); wishlist.add(addr1); wishlist.add(imgURL); wishlist.add(mapx); wishlist.add(mapy);
-                    docRef.update("WishList",wishlist); */
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
 
+                    /* 다이얼로그로 대체
                     Intent wishIntent = new Intent(v.getContext(),WishList.class); //v.getContext()
-
                     wishIntent.putExtra("tList",tList);
                     v.getContext().startActivity(wishIntent);
+                    */
+
                 }else{
                     System.out.println(items.get(position).title+"체크X");
                 }
