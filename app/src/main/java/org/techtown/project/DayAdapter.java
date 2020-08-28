@@ -51,6 +51,15 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     public LinearLayout getContainer(int position){
         return layouts.get(position);
     }
+    //8/27
+    int pos;
+    public void setPosition(int position){
+        this.pos = position;
+    }
+    public int getPosition(){
+        return  pos;
+    }
+    //
 
     public void addItem(Day item){
         items.add(item);
@@ -106,20 +115,40 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         return new ViewHolder(itemView,listener);
     }
-    //PlanActivity2에서 실행되면 지워도 될듯
+    //PlanActivity2에서 실행되면 지워도 될듯 =>getPosition,setPosition도 같이 지우기
+    //final List<String> placeLists = new ArrayList<String>();
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         if(requestCode == 1){
             if(resultCode == 2){
+                final int pos = getPosition();
                 title =data.getStringExtra("title");
-                //TextView txtPlace = new TextView(mContext);
-                //txtPlace.setText(val);
+
                 /*final TextView txtPlace = new TextView(mContext);
                 txtPlace.setText(title);
 
                 txtPlace.setPadding(10,10,10,10);
-                txtPlace.setBackgroundResource(R.drawable.txt_custom);*/
+                txtPlace.setBackgroundResource(R.drawable.txt_custom);
 
-                Toast.makeText(mContext,title+"dayAdapter",Toast.LENGTH_SHORT).show();
+                placeLists.add(txtPlace.getText().toString());
+
+                txtPlace.setTextSize(20);
+                txtPlace.setId(pos);
+                txtPlace.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(v.isClickable()){
+                            Toast.makeText(mContext,pos+" " +txtPlace.getText().toString(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+                lp.setMargins(10,10,10,10);
+                txtPlace.setLayoutParams(lp);
+                getContainer(pos).addView(txtPlace);
+                System.out.println("places: "+placeLists);*/
+
+                //Toast.makeText(mContext,title+"dayAdapter",Toast.LENGTH_SHORT).show(); //확인 OK
             }
         }
     }
@@ -134,6 +163,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(holder,v,position);
+                setPosition(position); //8/27 추가
                 //여기부터
                 /*Toast.makeText(mContext,(position)+"장소추가 버튼 클릭",Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = new MainFragment();
