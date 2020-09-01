@@ -17,8 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -128,7 +131,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             public void onClick(View v) {
                 if (((CheckBox)v).isChecked()){
                     //System.out.println(title+"체크"); //position final로 바뀜
-                    ArrayList<TourApi> tList = new ArrayList<TourApi>();
+                    final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     TourApi tourApi = new TourApi();
                     tourApi.setTitle(title);
                     tourApi.setAddr1(addr1);
@@ -137,10 +140,23 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     tourApi.setMapy(mapy);
                     tList.add(tourApi);
 
-                    //DB에 추가...! update말고 계속해서 추가할 수 있도록 수정하라
+                    // WishList 내용을 DB에 추가
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    DocumentReference docRef = db.collection("User").document(email);
-                    docRef.update("WishList",tList);
+                    final DocumentReference docRef = db.collection("User").document(email);
+                    //docRef.update("WishList",tList);
+
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                    wishList.addAll(tList);
+                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                } else { }
+                            } else { } }
+                    });
 
                     //알림 다이얼로그
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -161,7 +177,25 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     v.getContext().startActivity(wishIntent);
                     */
 
-                }else{
+                }else{ //체크박스해제하면?
+
+                    /* WishList 내용을 DB에서 삭제인데 아직 잘안돼서 주석!
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    final DocumentReference docRef = db.collection("User").document(email);
+
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                    wishList.removeAll(tlist);
+                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                } else { }
+                            } else { } }
+                    });
+                    */
                     System.out.println(items.get(position).title+"체크X");
                 }
 

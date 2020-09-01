@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             case R.id.tab_favorite:
                                 Intent intentW = new Intent(MainActivity.this, WishList.class);
+                                intentW.putExtra("user",currentuser);
                                 startActivity(intentW);
                                 Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_LONG).show();
                                 return true;
