@@ -152,8 +152,14 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) { //User -> 해당 email 문서가 있으면
                                     ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
-                                    wishList.addAll(tList);
-                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+
+                                    if(wishList!= null){ //wishlist필드가 생성된경우
+                                        wishList.addAll(tList);
+                                        docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                    }
+                                    else{//wishlist필드가 없는경우
+                                        docRef.update("WishList",tList);
+                                    }
                                 } else { }
                             } else { } }
                     });
