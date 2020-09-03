@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.util.Calendar;
@@ -52,6 +53,7 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
+                dpd.setMinDate(now); // 현재 이전의 날짜 선택X
                 dpd.show(getFragmentManager(),"Datepickerdialog");
             }
         });
@@ -77,7 +79,7 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
         this.monthOfYearEnd = monthOfYearEnd;
         this.dayOfMonthEnd = dayOfMonthEnd;
 
-        final String date = year+"/"+monthOfYear+"/"+dayOfMonth+" TO "+yearEnd+"/"+monthOfYearEnd+"/"+dayOfMonthEnd;
+        final String date = year+"/"+monthOfYear+"/"+dayOfMonth+" - "+yearEnd+"/"+monthOfYearEnd+"/"+dayOfMonthEnd;
         btnGoToPlan.setText(txtPlace.getText().toString()+"여행\n"+date+"등록하기");
         final int finalMonthOfYear = monthOfYear;
         btnGoToPlan.setVisibility(View.VISIBLE);

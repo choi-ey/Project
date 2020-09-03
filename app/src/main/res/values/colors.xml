@@ -5,6 +5,7 @@
     <color name="colorAccent">#2979FF</color>
 
     <color name="light_blue" >#44CEF6</color>
+    <color name="gray100" >#F5F5F5</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDivision">#e0e0e0</color>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -309,7 +310,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                         txtMemo.setText(val);
 
                         txtMemo.setPadding(10,10,10,10);
-                        txtMemo.setBackgroundResource(R.drawable.txt_custom);
+                        txtMemo.setBackgroundResource(R.drawable.memo_custom);
 
                         memoLists.add(txtMemo.getText().toString());
                         txtMemo.setTextSize(20);
@@ -342,7 +343,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                                         dialog.dismiss();
                                     }
                                 });
-                                ad.show();
+                                //ad.show(); //아래와 똑같은 이유
+                                AlertDialog dialog = ad.create();
+                                dialog.show();
+                                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
                             }
                         });
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
@@ -357,7 +361,11 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                         dialog.dismiss();
                     }
                 });
-                ad.show();
+                //ad.show();
+                //ad.show(); 지우고 dialog 한 이유: 취소버튼과 확인버튼 색 다르게
+                AlertDialog dialog = ad.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
 
                 //memo 눌렀을 때 메세지
                 //지움
@@ -371,7 +379,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                 //여까지
             }
         });
-
     }
     @Override
     public int getItemCount() {

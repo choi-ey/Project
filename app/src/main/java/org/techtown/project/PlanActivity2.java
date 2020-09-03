@@ -132,7 +132,7 @@ public class PlanActivity2 extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         //여행일정 모아 놓는 페이지에서 보여줄 내용 이곳에서 가져가기
         //장소, 시작 월, 일
-        //전체 날짜 받아오기 20xx/0x/xx TO 20xx/0x/xx
+        //전체 날짜 받아오기 20xx/0x/xx - 20xx/0x/xx
         String date = incomingIntent.getStringExtra("date");
         txtDate.setText(date);
 
