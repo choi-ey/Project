@@ -41,6 +41,7 @@ public class WishList extends AppCompatActivity {
     ArrayList<String> firstImages = null;
     ArrayList<String> mapxs = null;
     ArrayList<String> mapys = null;
+    ArrayList<Boolean> checks = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,8 @@ public class WishList extends AppCompatActivity {
         firstImages = new ArrayList<String>();
         mapxs = new ArrayList<String>();
         mapys = new ArrayList<String>();
+        //
+        checks = new ArrayList<Boolean>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("User").document(email);
 
@@ -95,12 +98,14 @@ public class WishList extends AppCompatActivity {
                             firstImages.add(map.get("firstImage").toString());
                             mapxs.add(map.get("mapx").toString());
                             mapys.add(map.get("mapy").toString());
+                            checks.add((Boolean) map.get("selected"));
                             tour = new TourApi();
                             tour.setAddr1(addr1s.get(i));
                             tour.setFirstImage(firstImages.get(i));
                             tour.setMapx(mapxs.get(i));
                             tour.setMapy(mapys.get(i));
                             tour.setTitle(titles.get(i));
+                            tour.setSelected(checks.get(i));
                             list.add(tour);
                         }
                         adapter = new TourApiAdapter(WishList.this,list);
