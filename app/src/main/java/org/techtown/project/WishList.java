@@ -2,6 +2,7 @@ package org.techtown.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class WishList extends AppCompatActivity {
 
@@ -74,11 +77,10 @@ public class WishList extends AppCompatActivity {
         firstImages = new ArrayList<String>();
         mapxs = new ArrayList<String>();
         mapys = new ArrayList<String>();
+        //
         checks = new ArrayList<Boolean>();
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("User").document(email);
-
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -96,6 +98,7 @@ public class WishList extends AppCompatActivity {
                             firstImages.add(map.get("firstImage").toString());
                             mapxs.add(map.get("mapx").toString());
                             mapys.add(map.get("mapy").toString());
+                            checks.add((Boolean) map.get("selected"));
                             tour = new TourApi();
                             tour.setAddr1(addr1s.get(i));
                             tour.setFirstImage(firstImages.get(i));
@@ -103,7 +106,6 @@ public class WishList extends AppCompatActivity {
                             tour.setMapy(mapys.get(i));
                             tour.setTitle(titles.get(i));
                             tour.setSelected(checks.get(i));
-
                             list.add(tour);
                         }
                         adapter = new TourApiAdapter(WishList.this,list);
