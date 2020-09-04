@@ -29,10 +29,14 @@ import java.util.ArrayList;
 public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHolder> {
 
     ArrayList<TourApi> items = new ArrayList<TourApi>();
-    Context mContext;
+    static Context mContext;
     OnTourApiItemClickListener listener;
     FirebaseAuth firebaseAuth;
     String email;
+    //boolean saveLoginData;
+    //CheckBox heart_check;
+    //SharedPreferences appData;
+
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
         this.items = items;
@@ -139,7 +143,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     tourApi.setMapx(mapx);
                     tourApi.setMapy(mapy);
                     tList.add(tourApi);
-
                     // WishList 내용을 DB에 추가
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     final DocumentReference docRef = db.collection("User").document(email);
@@ -163,6 +166,10 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 } else { }
                             } else { } }
                     });
+
+
+                    //체크부분 설정저장
+                    //save();
 
                     //알림 다이얼로그
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -215,7 +222,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         return items.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView apiTitle;
         TextView apiAddr1;
@@ -234,6 +241,19 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             plusbtn = itemView.findViewById(R.id.plusbtn);
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
+
+            //SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
+
+            //Creating editor to store values to shared preferences
+            //SharedPreferences.Editor editor = Preference.edit();
+
+            //Adding values to editor
+            //editor.putBoolean("preference", heart_check.isChecked());
+
+            //appData = mContext.getSharedPreferences("appData", MODE_PRIVATE);
+            //load();
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -246,4 +266,24 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         }
 
     }
+
+    /* 설정값을 저장하는 함수
+    private void save() {
+        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
+        SharedPreferences.Editor editor = appData.edit();
+
+        // 저장시킬 이름이 이미 존재하면 덮어씌움
+        editor.putBoolean("SAVE_LOGIN_DATA", heart_check.isChecked());
+
+        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
+        editor.apply();
+    }
+
+    // 설정값을 불러오는 함수
+    private void load() {
+        // 저장된 이름이 존재하지 않을 시 기본값
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+    }
+*/
+
 }

@@ -1,29 +1,29 @@
 package org.techtown.project;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firestore.v1.WriteResult;
 
 public class TagActivity extends AppCompatActivity {
 
     ActionBar actionBar;
     Toolbar toolbar;
     EditText Tagarea, Tagmeal,Tagetc;
-    FirebaseAuth firebaseAuth;
+    FirebaseFirestore db;
+    DocumentReference docRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +46,46 @@ public class TagActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final String user = intent.getExtras().getString("user");
 
+        db = FirebaseFirestore.getInstance();
+        docRef = db.collection("User").document(user);
+
+        //9.4 수정!
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) { //User 컬렉션에 해당 email 문서가 있으면
+                        String tag_ar= (String) document.get("Tag_area");
+                        String tag_me= (String) document.get("Tag_meal");
+                        String tag_et= (String) document.get("Tag_Etc");
+
+                        if(tag_ar!= null){ //태그 관련 필드가 이미 생성&저장 된경우
+                            Tagarea.setText(tag_ar);
+                            Tagmeal.setText(tag_me);
+                            Tagetc.setText(tag_et);
+                        }
+                        else{//태그관련 필드가 없는경우
+                        }
+                    } else { }
+                } else { } }
+        });
+
 
         Button buttonSubmit = (Button) findViewById(R.id.pre_submit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                //FirebaseUser user = firebaseAuth.getCurrentUser();
-                //String currentuser= user.getEmail(); //현재 로그인한 사용자의 이메일 가져오기
 
                 String tagarea=Tagarea.getText().toString();
                 String tagmeal=Tagmeal.getText().toString();
                 String tagetc=Tagetc.getText().toString();
 
-                // Update an existing document
-                DocumentReference docRef = db.collection("User").document(user);
-
-                // (async) Update one field
+                // Update one field
                 docRef.update("Tag_area",tagarea,"Tag_meal",tagmeal,"Tag_Etc",tagetc);
 
                 Intent intent = new Intent(TagActivity.this, MainActivity.class);
                 startActivity(intent);
-
             }
         });
 
