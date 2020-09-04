@@ -28,8 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHolder> {
 
     ArrayList<TourApi> items = new ArrayList<TourApi>();
@@ -37,18 +35,10 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     OnTourApiItemClickListener listener;
     FirebaseAuth firebaseAuth;
     String email;
-    //하트 체크박스
-    ArrayList<CheckBox> checks = new ArrayList<CheckBox>();
     boolean saveLoginData;
-    //CheckBox heart_check;
+    CheckBox heart_check;
     SharedPreferences appData;
-    int pos;
-    public void setPosition(int position){
-        this.pos = position;
-    }
-    public int getPosition(){
-        return  pos;
-    }
+    String title;
 
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
@@ -71,10 +61,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     public void setEmail(String email){
         this.email=email;
         System.out.println(email+"어댑터");
-    }
-    //하트체크
-    public CheckBox getCheckBox(int position){
-        return checks.get(position);
     }
 
 
@@ -158,20 +144,13 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         });
 
         //좋아요 체크박스 버튼 누르면 하트 채워지고 wishList로 넘어가도록
-
         holder.heart_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox)v).isChecked()){
-                    //9/4 추가
-                    /*checks.add(holder.heart_check);
-                    setPosition(position);
-                    System.out.println("gkxmgkxm"+position);*/
-
                     //System.out.println(title+"체크"); //position final로 바뀜
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     TourApi tourApi = new TourApi();
-                    ///////
                     tourApi.setSelected(true);
                     tourApi.setTitle(title);
                     tourApi.setAddr1(addr1);
@@ -278,16 +257,15 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
 
-
-            //SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
+            /*SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
 
             //Creating editor to store values to shared preferences
             //SharedPreferences.Editor editor = Preference.edit();
 
             //Adding values to editor
-            //editor.putBoolean("preference", heart_check.isChecked());
+            editor.putBoolean("preference", heart_check.isChecked()); */
 
-            appData = mContext.getSharedPreferences("appData", MODE_PRIVATE);
+            appData = mContext.getSharedPreferences("appData", Context.MODE_PRIVATE);
             load();
 
 
@@ -300,32 +278,32 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     }
                 }
             });
+
         }
 
     }
 
-     //설정값을 저장하는 함수
+    // 설정값을 저장하는 함수
     private void save(CheckBox cb) {
         // SharedPreferences 객체만으론 저장 불가능 Editor 사용
         SharedPreferences.Editor editor = appData.edit();
-        //int pospos = getPosition();
-        //System.out.println("포지션확인"+pospos);
-        CheckBox checkBox = cb;
+        CheckBox checkBox=cb;
 
         // 저장시킬 이름이 이미 존재하면 덮어씌움
         editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-        System.out.println(checkBox.isChecked()+" :save");
-
-
         // apply, commit 을 안하면 변경된 내용이 저장되지 않음
         editor.apply();
     }
 
     // 설정값을 불러오는 함수
-    public void load() {
+    private void load() {
         // 저장된 이름이 존재하지 않을 시 기본값
-        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
-        System.out.println(saveLoginData+" :load");
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
+
+        System.out.println(saveLoginData+" +load");
+
+        //안녕?
+
     }
 
 

@@ -19,6 +19,17 @@ public class TourApi implements Serializable {
         isSelected = selected;
     }
 
+    //9/4 하트박스 추가
+    boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     public String getMapx() {
         return mapx;
     }
