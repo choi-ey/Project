@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,6 +110,16 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         //mapbtn
         final String mapx = items.get(position).mapx;
         final String mapy = items.get(position).mapy;
+
+        final TourApi tourApi = items.get(position);
+        holder.heart_check.setChecked(tourApi.isSelected());
+        holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tourApi.setSelected(isChecked);
+                System.out.println("변경: "+isChecked);
+            }
+        });
 
         //지도 보여주는 버튼
         holder.mapbtn.setOnClickListener(new View.OnClickListener() {
@@ -267,6 +278,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
 
+
             //SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
 
             //Creating editor to store values to shared preferences
@@ -274,7 +286,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
             //Adding values to editor
             //editor.putBoolean("preference", heart_check.isChecked());
-
 
             appData = mContext.getSharedPreferences("appData", MODE_PRIVATE);
             load();
