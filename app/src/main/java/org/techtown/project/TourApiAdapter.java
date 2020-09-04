@@ -302,7 +302,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
         System.out.println(saveLoginData+" +load");
 
-        //안녕?
+        //반가워
 
     }
 
