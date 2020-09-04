@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +35,10 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     OnTourApiItemClickListener listener;
     FirebaseAuth firebaseAuth;
     String email;
-    //boolean saveLoginData;
-    //CheckBox heart_check;
-    //SharedPreferences appData;
+    boolean saveLoginData;
+    CheckBox heart_check;
+    SharedPreferences appData;
+    String title;
 
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
@@ -82,7 +85,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final String title = items.get(position).title;
         final String addr1 = items.get(position).addr1; //"주소: "+
         final String imgURL = items.get(position).firstImage;
@@ -93,6 +96,17 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         //mapbtn
         final String mapx = items.get(position).mapx;
         final String mapy = items.get(position).mapy;
+
+        final TourApi tourApi = items.get(position);
+        holder.heart_check.setChecked(tourApi.isSelected());
+        holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tourApi.setSelected(isChecked);
+                System.out.println("변경: "+isChecked);
+            }
+        });
+
         //지도 보여주는 버튼
         holder.mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +151,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     //System.out.println(title+"체크"); //position final로 바뀜
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     TourApi tourApi = new TourApi();
+                    tourApi.setSelected(true);
                     tourApi.setTitle(title);
                     tourApi.setAddr1(addr1);
                     tourApi.setFirstImage(imgURL);
@@ -169,7 +184,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
 
                     //체크부분 설정저장
-                    //save();
+                    save(holder.heart_check);
 
                     //알림 다이얼로그
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -242,16 +257,16 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
 
-            //SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
+            /*SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
 
             //Creating editor to store values to shared preferences
             //SharedPreferences.Editor editor = Preference.edit();
 
             //Adding values to editor
-            //editor.putBoolean("preference", heart_check.isChecked());
+            editor.putBoolean("preference", heart_check.isChecked()); */
 
-            //appData = mContext.getSharedPreferences("appData", MODE_PRIVATE);
-            //load();
+            appData = mContext.getSharedPreferences("appData", Context.MODE_PRIVATE);
+            load();
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -263,18 +278,19 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     }
                 }
             });
+
         }
 
     }
 
-    /* 설정값을 저장하는 함수
-    private void save() {
+    // 설정값을 저장하는 함수
+    private void save(CheckBox cb) {
         // SharedPreferences 객체만으론 저장 불가능 Editor 사용
         SharedPreferences.Editor editor = appData.edit();
+        CheckBox checkBox=cb;
 
         // 저장시킬 이름이 이미 존재하면 덮어씌움
-        editor.putBoolean("SAVE_LOGIN_DATA", heart_check.isChecked());
-
+        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
         // apply, commit 을 안하면 변경된 내용이 저장되지 않음
         editor.apply();
     }
@@ -282,8 +298,13 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     // 설정값을 불러오는 함수
     private void load() {
         // 저장된 이름이 존재하지 않을 시 기본값
-        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
+
+        System.out.println(saveLoginData+" +load");
+
+        //안녕?
+
     }
-*/
+
 
 }
