@@ -2,7 +2,6 @@ package org.techtown.project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class WishList extends AppCompatActivity {
 
@@ -108,8 +105,37 @@ public class WishList extends AppCompatActivity {
                             tour.setSelected(checks.get(i));
                             list.add(tour);
                         }
+                        System.out.println(tour.isSelected());
                         adapter = new TourApiAdapter(WishList.this,list);
                         wishRecycler.setAdapter(adapter);
+
+
+                        if(tour.isSelected()==false){ //체크박스가 해제되면
+
+                            System.out.println("wishfalse");
+
+                          /*
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            final DocumentReference docRef = db.collection("User").document(email);
+
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document != null) { //User -> 해당 email 문서가 있으면
+                                            ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                            wishList.remove(list);
+
+                                            docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                        } else { }
+                                    } else { } }
+                            });
+
+*/
+
+                        }
+
 
                     } else { }
                 } else { } }

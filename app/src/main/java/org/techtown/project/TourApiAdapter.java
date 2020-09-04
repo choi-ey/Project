@@ -207,7 +207,10 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
                 }else{ //체크박스해제하면?
 
-                    /* WishList 내용을 DB에서 삭제인데 아직 잘안돼서 주석!
+                    tourApi.setSelected(false);
+                   // System.out.println(tourApi.isSelected());
+
+
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     final DocumentReference docRef = db.collection("User").document(email);
 
@@ -218,12 +221,13 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) { //User -> 해당 email 문서가 있으면
                                     ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
-                                    wishList.removeAll(tlist);
+                                    wishList.remove(position);
+
                                     docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
                                 } else { }
                             } else { } }
                     });
-                    */
+
                     System.out.println(items.get(position).title+"체크X");
                 }
 
@@ -301,8 +305,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
 
         System.out.println(saveLoginData+" +load");
-
-        //반가워
 
     }
 
