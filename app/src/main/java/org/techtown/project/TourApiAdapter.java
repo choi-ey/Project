@@ -171,7 +171,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     //System.out.println(title+"체크"); //position final로 바뀜
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     TourApi tourApi = new TourApi();
-                    //
+                    ///////
                     tourApi.setSelected(true);
                     tourApi.setTitle(title);
                     tourApi.setAddr1(addr1);
