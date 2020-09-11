@@ -188,7 +188,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
                     //알림 다이얼로그
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("추가 완료").setMessage("위시리스트에 해당항목이 추가되었습니다");
+                    builder.setTitle("추가 완료").setMessage("위시리스트에 '"+title+"'이 추가되었습니다");
                     builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

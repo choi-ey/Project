@@ -85,6 +85,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 MyAsyncTask myAsyncTask = new MyAsyncTask();
                 myAsyncTask.execute();
+                //adapter.save();
             }
         });
 
