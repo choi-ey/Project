@@ -306,6 +306,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
         System.out.println(saveLoginData+" +load");
 
+        //회의중임다!
+
     }
 
 
