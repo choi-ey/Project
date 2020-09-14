@@ -1,13 +1,5 @@
 package org.techtown.project;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -26,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlanActivity2 extends AppCompatActivity {
@@ -47,7 +50,20 @@ public class PlanActivity2 extends AppCompatActivity {
     String title;
     int aPosition;
     LinearLayout container;
-    List<String> placeLists =new ArrayList<String>(); //한번에 저장되는 거 수정하기
+    //9/12추가
+
+    String user;
+    String place;
+
+    //일정을 db에 저장하기 위한arraylist 목록
+    List<String> placeLists =new ArrayList<String>();
+    ArrayList<String> day1 = new ArrayList<>();
+    ArrayList<String> day2 = new ArrayList<>();
+    ArrayList<String> day3 = new ArrayList<>();
+    ArrayList<String> day4 = new ArrayList<>();
+    ArrayList<String> day5 = new ArrayList<>();
+    ArrayList<String> Else = new ArrayList<>();
+
     //8/27 네이버 검색기능
     String naverSearch;
     String str;
@@ -69,7 +85,30 @@ public class PlanActivity2 extends AppCompatActivity {
                 txtPlace.setPadding(10,10,10,10);
                 txtPlace.setBackgroundResource(R.drawable.txt_custom);
 
-                placeLists.add(txtPlace.getText().toString());
+                    switch(pos){
+                        case 0:
+                            day1.add(txtPlace.getText().toString());
+                            break;
+                        case 1:
+                            day2.add(txtPlace.getText().toString());
+                            break;
+                        case 2:
+                            day3.add(txtPlace.getText().toString());
+                            break;
+                        case 3:
+                            day4.add(txtPlace.getText().toString());
+                            break;
+                        case 4:
+                            day5.add(txtPlace.getText().toString());
+                            break;
+                        default:
+                            Else.add(txtPlace.getText().toString());
+                    }
+                System.out.println(day1);System.out.println(day2);System.out.println(day3);
+
+
+
+                placeLists.add(txtPlace.getText().toString()); //장소추가한 목록 저장
 
                 txtPlace.setTextSize(20);
                 txtPlace.setId(pos);
@@ -109,6 +148,21 @@ public class PlanActivity2 extends AppCompatActivity {
                 container.addView(txtPlace);
                 System.out.println("places: "+placeLists);
                 //Toast.makeText(PlanActivity2.this,title+"가져옴2",Toast.LENGTH_SHORT).show();//확인 OK
+
+                // txtPlace로 문서생성-> db update
+
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db.collection("User").document(user);//.collection("Plan").document(place);
+                docRef.collection("Plan").document(place).set(new HashMap<String, Object>() {{
+                    put("Day1",day1);
+                    put("Day2",day2);
+                    put("Day3",day3);
+                    put("Day4",day4);
+                    put("Day5",day5);
+                    put("else",Else);
+                }});
+
             }else{
                 Toast.makeText(PlanActivity2.this,"실패",Toast.LENGTH_SHORT).show();
             }
@@ -139,6 +193,11 @@ public class PlanActivity2 extends AppCompatActivity {
         //여행지 받아오기
         String place = incomingIntent.getStringExtra("place");
         txtPlace.setText(place+" 여행");
+
+        //db에 저장하기 위한 로그인한 user정보 받아옴
+        Intent intent = getIntent();
+        user = intent.getExtras().getString("user");
+
         //시작과 끝 날짜 받아오기
         month = incomingIntent.getIntExtra("month",0);
         sDate = incomingIntent.getIntExtra("sDate",0);

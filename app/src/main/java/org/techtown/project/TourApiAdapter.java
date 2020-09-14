@@ -288,7 +288,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     }
 
     // 설정값을 저장하는 함수
-    private void save(CheckBox cb) {
+    public void save(CheckBox cb) {
         // SharedPreferences 객체만으론 저장 불가능 Editor 사용
         SharedPreferences.Editor editor = appData.edit();
         CheckBox checkBox=cb;
@@ -305,7 +305,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
 
         System.out.println(saveLoginData+" +load");
-        System.out.println(saveLoginData+" +load22");
         //회의중임다!
 
     }

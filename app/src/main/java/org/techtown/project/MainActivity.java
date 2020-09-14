@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             case R.id.tab_plan:
                                 Intent intentP = new Intent(MainActivity.this, PlanActivity.class);
+                                intentP.putExtra("user",currentuser);
                                 startActivity(intentP);
                                 Toast.makeText(getApplicationContext(),"Plan",Toast.LENGTH_LONG).show();
                                 return true;
