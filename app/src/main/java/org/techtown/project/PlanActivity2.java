@@ -17,8 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -30,6 +30,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PlanActivity2 extends AppCompatActivity {
 
@@ -50,8 +51,9 @@ public class PlanActivity2 extends AppCompatActivity {
     String title;
     int aPosition;
     LinearLayout container;
-    //9/12추가
+    //9/16추가
 
+    FirebaseFirestore db;
     String user;
     String place;
 
@@ -63,6 +65,7 @@ public class PlanActivity2 extends AppCompatActivity {
     ArrayList<String> day4 = new ArrayList<>();
     ArrayList<String> day5 = new ArrayList<>();
     ArrayList<String> Else = new ArrayList<>();
+
 
     //8/27 네이버 검색기능
     String naverSearch;
@@ -85,28 +88,42 @@ public class PlanActivity2 extends AppCompatActivity {
                 txtPlace.setPadding(10,10,10,10);
                 txtPlace.setBackgroundResource(R.drawable.txt_custom);
 
+                //DB열기
+                db = FirebaseFirestore.getInstance();
+                Map<String, Object> plan= new HashMap<>();
+                Map<String, Object> docData = new HashMap<>();
+                //plan 일정 저장하기
                     switch(pos){
                         case 0:
                             day1.add(txtPlace.getText().toString());
+                            docData.put("Day1",day1);
                             break;
                         case 1:
                             day2.add(txtPlace.getText().toString());
+                            docData.put("Day2",day2);
                             break;
                         case 2:
                             day3.add(txtPlace.getText().toString());
+                            docData.put("Day3",day3);
                             break;
                         case 3:
                             day4.add(txtPlace.getText().toString());
+                            docData.put("Day4",day4);
                             break;
                         case 4:
                             day5.add(txtPlace.getText().toString());
+                            docData.put("Day5",day5);
                             break;
                         default:
                             Else.add(txtPlace.getText().toString());
+                            docData.put("else",Else);
                     }
-                System.out.println(day1);System.out.println(day2);System.out.println(day3);
 
+                    //DB에 추가
+                plan.put(place,docData);
+                db.collection("Plan").document(user).set(plan, SetOptions.merge());
 
+                //System.out.println(day1);System.out.println(day2);System.out.println(day3);
 
                 placeLists.add(txtPlace.getText().toString()); //장소추가한 목록 저장
 
@@ -152,16 +169,7 @@ public class PlanActivity2 extends AppCompatActivity {
                 // txtPlace로 문서생성-> db update
 
 
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("User").document(user);//.collection("Plan").document(place);
-                docRef.collection("Plan").document(place).set(new HashMap<String, Object>() {{
-                    put("Day1",day1);
-                    put("Day2",day2);
-                    put("Day3",day3);
-                    put("Day4",day4);
-                    put("Day5",day5);
-                    put("else",Else);
-                }});
+
 
             }else{
                 Toast.makeText(PlanActivity2.this,"실패",Toast.LENGTH_SHORT).show();
@@ -191,7 +199,7 @@ public class PlanActivity2 extends AppCompatActivity {
         txtDate.setText(date);
 
         //여행지 받아오기
-        String place = incomingIntent.getStringExtra("place");
+        place = incomingIntent.getStringExtra("place");
         txtPlace.setText(place+" 여행");
 
         //db에 저장하기 위한 로그인한 user정보 받아옴
