@@ -98,14 +98,102 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         final String mapy = items.get(position).mapy;
 
         final TourApi tourApi = items.get(position);
+        holder.heart_check.setOnCheckedChangeListener(null); //9.14 스크롤해도 하트 남아있게
         holder.heart_check.setChecked(tourApi.isSelected());
         holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tourApi.setSelected(isChecked);
+                //tourApi.setSelected(isChecked);
                 System.out.println("변경: "+isChecked);
+                /*if (!isChecked){
+                    System.out.println("취소취소 ");
+                }*/
+                if (isChecked){
+                    tourApi.setSelected(isChecked);
+                    final ArrayList<TourApi> tList = new ArrayList<TourApi>();
+                    TourApi tourApi = new TourApi();
+                    tourApi.setSelected(true);
+                    tourApi.setTitle(title);
+                    tourApi.setAddr1(addr1);
+                    tourApi.setFirstImage(imgURL);
+                    tourApi.setMapx(mapx);
+                    tourApi.setMapy(mapy);
+                    tList.add(tourApi);
+                    // WishList 내용을 DB에 추가
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    final DocumentReference docRef = db.collection("User").document(email);
+                    //docRef.update("WishList",tList);
+
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList<TourApi> wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                    //<TourApi> 추가 9/3
+                                    if(wishList!= null){ //wishlist필드가 생성된경우
+
+                                        wishList.addAll(tList);
+                                        docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+
+                                    }
+                                    else{//wishlist필드가 없는경우
+                                        docRef.update("WishList",tList);
+                                    }
+                                } else { }
+                            } else { } }
+                    });
+
+                    //알림 다이얼로그
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("추가 완료").setMessage("위시리스트에 '"+title+"'이 추가되었습니다");
+                    builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+
+                }else{ //체크박스해제하면?
+                    tourApi.setSelected(isChecked);
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    final DocumentReference docRef = db.collection("User").document(email);
+
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                    wishList.remove(position);
+
+                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                } else { }
+                            } else { } }
+                    });
+
+                    //알림 다이얼로그 9/14
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("추가 취소").setMessage("위시리스트에 '"+title+"'이 삭제되었습니다");
+                    builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+
             }
-        });
+        }); //여까지 수정 9/17
 
         //지도 보여주는 버튼
         holder.mapbtn.setOnClickListener(new View.OnClickListener() {
@@ -142,9 +230,18 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 //여기까지
             }
         });
+        //추가 하트박스 이거없으면 하트 누르면 전체 누른것으로 인식
+        holder.heart_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         //좋아요 체크박스 버튼 누르면 하트 채워지고 wishList로 넘어가도록
-        holder.heart_check.setOnClickListener(new View.OnClickListener() {
+        ///여기서부터 지워도 됨
+      /*//  holder.heart_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((CheckBox)v).isChecked()){
@@ -205,7 +302,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     v.getContext().startActivity(wishIntent);
                     */
 
-                }else{ //체크박스해제하면?
+         /*//       }else{ //체크박스해제하면?
 
                     tourApi.setSelected(false);
                    // System.out.println(tourApi.isSelected());
@@ -232,7 +329,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 }
 
             }
-        });
+        }); */ ////여까지
 
     }
 
@@ -261,17 +358,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
 
-            /*SharedPreferences Preference = mContext.getSharedPreferences("preference", Context.MODE_PRIVATE);
-
-            //Creating editor to store values to shared preferences
-            //SharedPreferences.Editor editor = Preference.edit();
-
-            //Adding values to editor
-            editor.putBoolean("preference", heart_check.isChecked()); */
-
-            appData = mContext.getSharedPreferences("appData", Context.MODE_PRIVATE);
-            load();
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -284,28 +370,6 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             });
 
         }
-
-    }
-
-    // 설정값을 저장하는 함수
-    public void save(CheckBox cb) {
-        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
-        SharedPreferences.Editor editor = appData.edit();
-        CheckBox checkBox=cb;
-
-        // 저장시킬 이름이 이미 존재하면 덮어씌움
-        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
-        editor.apply();
-    }
-
-    // 설정값을 불러오는 함수
-    private void load() {
-        // 저장된 이름이 존재하지 않을 시 기본값
-        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA",false);
-
-        System.out.println(saveLoginData+" +load");
-        //회의중임다!
 
     }
 }

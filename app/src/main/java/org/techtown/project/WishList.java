@@ -2,6 +2,8 @@ package org.techtown.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -105,9 +107,22 @@ public class WishList extends AppCompatActivity {
                             tour.setSelected(checks.get(i));
                             list.add(tour);
                         }
-                        System.out.println(tour.isSelected());
+                        System.out.println(tour.isSelected()+"wishList");
                         adapter = new TourApiAdapter(WishList.this,list);
                         wishRecycler.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
+                            @Override
+                            public void OnItemClick(TourApiAdapter.ViewHolder holder, View view, int position) {
+                                System.out.println(position+"  wish");
+                                holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        tour.setSelected(isChecked);
+                                        System.out.println("위시에서 바뀜");
+                                    }
+                                });
+                            }
+                        });
 
 
                         if(tour.isSelected()==false){ //체크박스가 해제되면

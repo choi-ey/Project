@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -82,7 +83,6 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 MyAsyncTask myAsyncTask = new MyAsyncTask();
                 myAsyncTask.execute();
-                //adapter.save();
             }
         });
 
@@ -309,6 +309,11 @@ public class MainFragment extends Fragment {
 
             adapter = new TourApiAdapter(getContext(),list);
             adapter.setEmail(email);
+            /*
+            int pos =adapter.getPosition();
+            System.out.println(pos);
+            CheckBox checkBox = adapter.getCheckBox(pos);
+            adapter.save(checkBox);*/
 
             recyclerView.setAdapter(adapter);
             adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
