@@ -72,7 +72,7 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, final int dayOfMonth, int yearEnd, int monthOfYearEnd, final int dayOfMonthEnd) {
+    public void onDateSet(DatePickerDialog view, final int year, int monthOfYear, final int dayOfMonth, int yearEnd, int monthOfYearEnd, final int dayOfMonthEnd) {
         monthOfYear = monthOfYear+1;
         monthOfYearEnd = monthOfYearEnd+1;
         this.year = year;
@@ -91,6 +91,7 @@ public class PlanActivity extends AppCompatActivity implements DatePickerDialog.
             public void onClick(View v) {
                 Intent intent = new Intent(PlanActivity.this,PlanActivity2.class);
                 intent.putExtra("place",txtPlace.getText().toString());
+                intent.putExtra("year",year);
                 intent.putExtra("date",date);
                 intent.putExtra("month", finalMonthOfYear);
                 intent.putExtra("sDate",dayOfMonth);

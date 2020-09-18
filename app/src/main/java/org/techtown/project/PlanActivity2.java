@@ -37,8 +37,8 @@ public class PlanActivity2 extends AppCompatActivity {
     Toolbar toolbar;
     private TextView txtDate;
     private TextView txtPlace;
-    //장소추가 버튼
-    private Button plusPlace;
+    //PlanActivity로 날짜 받아오기
+    private int year;
     private int sDate;
     private int eDate;
     private int month;
@@ -117,6 +117,7 @@ public class PlanActivity2 extends AppCompatActivity {
                             Else.add(txtPlace.getText().toString());
                             docData.put("else",Else);
                     }
+                    docData.put("year",year);
                     docData.put("sdate",sDate);
                     docData.put("ddate",eDate);
                     docData.put("month",month);
@@ -210,6 +211,7 @@ public class PlanActivity2 extends AppCompatActivity {
         user = intent.getExtras().getString("user");
 
         //시작과 끝 날짜 받아오기
+        year = incomingIntent.getIntExtra("year",0);
         month = incomingIntent.getIntExtra("month",0);
         sDate = incomingIntent.getIntExtra("sDate",0);
         //Toast.makeText(this,sDate,Toast.LENGTH_LONG).show();

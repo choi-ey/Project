@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".PlanList"></activity>
         <activity
             android:name=".MapActivity2"
             android:parentActivityName=".MainActivity" />
