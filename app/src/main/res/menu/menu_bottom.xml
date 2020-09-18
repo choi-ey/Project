@@ -17,10 +17,10 @@
         android:icon="@drawable/ic_favorite"
         android:title="Favorite"/>
     <item
-        android:id="@+id/tab_search"
+        android:id="@+id/tab_recommend"
         android:enabled="true"
-        android:icon="@drawable/ic_search"
-        android:title="Search"/>
+        android:icon="@drawable/recommend"
+        android:title="Recommend"/>
     <item
         android:id="@+id/tab_map"
         android:enabled="true"

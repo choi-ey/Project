@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHolder> {
 
@@ -357,6 +358,42 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             plusbtn = itemView.findViewById(R.id.plusbtn);
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
+         /*   //9/18 콘솔하트 가져오기 시도
+            //final String str = items.get(1).title;
+            final ArrayList<String> wTitles = new ArrayList<String>();
+            //wTitles.add(items.get(getAdapterPosition()).title);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            final DocumentReference docRef = db.collection("User").document(email);
+            //docRef.update("WishList",tList);
+
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) { //User -> 해당 email 문서가 있으면
+                            ArrayList<TourApi> wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                            //<TourApi> 추가 9/3
+                            if(wishList!= null){ //wishlist필드가 생성된경우
+                                ArrayList array= (ArrayList)document.getData().get("WishList");
+                                int size = wishList.size();
+                                for (int i = 0; i< size; i++){
+                                    HashMap map = (HashMap) array.get(i);
+                                    wTitles.add(items.get(i).title);
+                                    //wTitles.add(map.get("title").toString());
+                                    if (wTitles.get(i).equals(map.get("title").toString())){
+                                        heart_check.setChecked((Boolean)map.get("selected"));
+                                    }
+
+                                }
+                                System.out.println(wTitles);
+
+                            }
+                            else{//wishlist필드가 없는경우
+                            }
+                        } else { }
+                    } else { } }
+            });*/
 
 
             itemView.setOnClickListener(new View.OnClickListener() {

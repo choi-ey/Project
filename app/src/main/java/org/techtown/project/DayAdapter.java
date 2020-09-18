@@ -333,7 +333,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                         //update_memo.put("강남.memo",val);
                         //docRef.update(update_memo);
 
-
+/*
                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -351,7 +351,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
                                     } else { }
                                 } else { } }
-                        });
+                        });*/
 
                         memoLists.add(txtMemo.getText().toString());
                         txtMemo.setTextSize(20);

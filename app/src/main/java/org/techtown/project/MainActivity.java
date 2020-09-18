@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction().replace(R.id.container,mainFragment).commit();
                                 //프래그먼트 사용시 교재 333p
                                 return true;
-                            case R.id.tab_search:
-                                Toast.makeText(getApplicationContext(),"Search",Toast.LENGTH_LONG).show();
+                            case R.id.tab_recommend:
+                                Toast.makeText(getApplicationContext(),"Recommend",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.tab_favorite:
                                 Intent intentW = new Intent(MainActivity.this, WishList.class);
