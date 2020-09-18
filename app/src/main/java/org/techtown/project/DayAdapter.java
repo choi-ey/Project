@@ -130,6 +130,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         return new ViewHolder(itemView,listener);
     }
+    //여기부터
     //PlanActivity2에서 실행되면 지워도 될듯 =>getPosition,setPosition도 같이 지우기
     //final List<String> placeLists = new ArrayList<String>();
     public void onActivityResult(int requestCode,int resultCode,Intent data){
@@ -166,7 +167,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                 //Toast.makeText(mContext,title+"dayAdapter",Toast.LENGTH_SHORT).show(); //확인 OK
             }
         }
-    }
+    } //여까지 지워도됨
 
     @Override
     public void onBindViewHolder(@NonNull final DayAdapter.ViewHolder holder, final int position) {

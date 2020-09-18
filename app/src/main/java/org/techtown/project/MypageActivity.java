@@ -121,7 +121,7 @@ public class MypageActivity extends AppCompatActivity {
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(MypageActivity.this, "parent_list: "+groupPosition, Toast.LENGTH_LONG).show();
+                //Toast.makeText(MypageActivity.this, "parent_list: "+groupPosition, Toast.LENGTH_LONG).show();
                 return false;
             }
         });
@@ -133,14 +133,14 @@ public class MypageActivity extends AppCompatActivity {
                 if(groupPosition == 0){
                     switch(childPosition){
                         case 0:
-                            Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
                             Intent planIntent = new Intent(getApplicationContext(), PlanActivity.class);
                             startActivity(planIntent);
                             break;
                         case 1:
-                            Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
-                            //Intent listIntent = new Intent(getApplicationContext(), PlanlistActivity.class);
-                            //startActivity(listIntent);
+                            //Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
+                            Intent listIntent = new Intent(getApplicationContext(), PlanList.class);
+                            startActivity(listIntent);
                             break;
                     }
                 }else if(groupPosition == 1){
