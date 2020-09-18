@@ -52,7 +52,6 @@ public class PlanActivity2 extends AppCompatActivity {
     int aPosition;
     LinearLayout container;
     //9/16추가
-
     FirebaseFirestore db;
     String user;
     String place;
@@ -65,7 +64,7 @@ public class PlanActivity2 extends AppCompatActivity {
     ArrayList<String> day4 = new ArrayList<>();
     ArrayList<String> day5 = new ArrayList<>();
     ArrayList<String> Else = new ArrayList<>();
-
+    //ArrayList<String> memo= new ArrayList<>();
 
     //8/27 네이버 검색기능
     String naverSearch;
@@ -118,7 +117,11 @@ public class PlanActivity2 extends AppCompatActivity {
                             Else.add(txtPlace.getText().toString());
                             docData.put("else",Else);
                     }
+                    docData.put("sdate",sDate);
+                    docData.put("ddate",eDate);
+                    docData.put("month",month);
 
+                    docData.put("memo",null);
                     //DB에 추가
                 plan.put(place,docData);
                 db.collection("Plan").document(user).set(plan, SetOptions.merge());
@@ -226,6 +229,7 @@ public class PlanActivity2 extends AppCompatActivity {
             list.add(day);
         }
         adapter = new DayAdapter(PlanActivity2.this,list); //,sublist => Memo가 필요없어짐
+        adapter.setInfo(user,place);
         recyclerView.setAdapter(adapter);
 
         //8/24 수정

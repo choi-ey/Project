@@ -1,6 +1,5 @@
 package org.techtown.project;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,11 +16,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
@@ -35,6 +39,11 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     Button plusPlace;
     //LinearLayout container;
     ArrayList<LinearLayout> layouts = new ArrayList<LinearLayout>();
+    //9.16 추가
+    String user;
+    String place;
+    FirebaseFirestore db;
+    ArrayList memo= new ArrayList();
 
     public DayAdapter(Context context,ArrayList<Day> items){
         this.mContext = context;
@@ -79,8 +88,13 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     public void setOnItemClickListener(OnDayItemClickListener listener){
         this.listener = listener;
     }
+    public void setInfo(String user, String place){
+        this.user=user;
+        this.place=place;
 
-    public class ViewHolder extends RecyclerView.ViewHolder{ //8/24 static에서 public으로
+    }
+
+   public class ViewHolder extends RecyclerView.ViewHolder{ //8/24 static에서 public으로
         TextView txtDate;
         //Button plusPlace;
         Button enterMemo;
@@ -304,13 +318,40 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        String val = editText.getText().toString();
+                        final String val = editText.getText().toString();
 
                         final TextView txtMemo = new TextView(mContext);
                         txtMemo.setText(val);
 
                         txtMemo.setPadding(10,10,10,10);
                         txtMemo.setBackgroundResource(R.drawable.memo_custom);
+
+                        //DB에도 메모추가
+                        db = FirebaseFirestore.getInstance();
+                        final DocumentReference docRef=db.collection("Plan").document(user);
+                        //Map<String, Object> update_memo= new HashMap<>();
+                        //update_memo.put("강남.memo",val);
+                        //docRef.update(update_memo);
+
+
+                       docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document != null) { //User 컬렉션에 해당 email 문서가 있으면
+                                        ArrayList days= (ArrayList) document.get(place);
+                                        int size= days.size();
+                                        HashMap map = (HashMap) days.get(size-1);
+
+                                        //memoLists.add(val);
+                                        //plan.addAll(memoLists);
+                                        //docRef.update(place,plan);
+
+
+                                    } else { }
+                                } else { } }
+                        });
 
                         memoLists.add(txtMemo.getText().toString());
                         txtMemo.setTextSize(20);
