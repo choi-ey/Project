@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +33,7 @@ import java.util.Map;
 
 public class PlanActivity2 extends AppCompatActivity {
 
+    ActionBar actionBar;
     Toolbar toolbar;
     private TextView txtDate;
     private TextView txtPlace;
@@ -185,12 +185,12 @@ public class PlanActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan2);
-
         //툴바
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setTitle("여행계획");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         txtDate = findViewById(R.id.txtDate);
         txtPlace = findViewById(R.id.txtPlace);
