@@ -89,6 +89,7 @@ public class WishList extends AppCompatActivity {
                     if (document != null) { //User -> 해당 email 문서가 있으면
                         //wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
                         wishList= (ArrayList)document.getData().get("WishList");
+                        System.out.println(wishList); //9.20 확인용
                         size = wishList.size();
                         for (int i = 0; i< size; i++){
                             HashMap map = (HashMap) wishList.get(i);

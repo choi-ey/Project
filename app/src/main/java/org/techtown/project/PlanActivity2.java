@@ -118,8 +118,8 @@ public class PlanActivity2 extends AppCompatActivity {
                             docData.put("else",Else);
                     }
                     docData.put("year",year);
-                    docData.put("sdate",sDate);
-                    docData.put("ddate",eDate);
+                    docData.put("sDate",sDate);
+                    docData.put("eDate",eDate);
                     docData.put("month",month);
 
                     docData.put("memo",null);

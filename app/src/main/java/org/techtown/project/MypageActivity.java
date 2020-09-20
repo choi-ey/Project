@@ -71,7 +71,7 @@ public class MypageActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         Intent intent = getIntent();
         String mName = intent.getExtras().getString("name");
-        String mEmail = intent.getExtras().getString("email");
+        final String mEmail = intent.getExtras().getString("email");
         name.setText(mName);
         email.setText(mEmail);
         //네비게이션
@@ -133,13 +133,17 @@ public class MypageActivity extends AppCompatActivity {
                 if(groupPosition == 0){
                     switch(childPosition){
                         case 0:
+                            //일정계획
                             //Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
                             Intent planIntent = new Intent(getApplicationContext(), PlanActivity.class);
+                            planIntent.putExtra("user",mEmail);
                             startActivity(planIntent);
                             break;
                         case 1:
+                            //지난계획
                             //Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
                             Intent listIntent = new Intent(getApplicationContext(), PlanList.class);
+                            listIntent.putExtra("user",mEmail); //9/20추가
                             startActivity(listIntent);
                             break;
                     }
