@@ -81,6 +81,15 @@ public class PlanActivity2 extends AppCompatActivity {
                 title = data.getStringExtra("title");
                 //adapter.onActivityResult(requestCode, resultCode, data);
                 //여기서도 DayAdapter 에서도 똑같이 작동 => 여기서 해보기
+                //db저장된거 가져와 보이기 =>아직,,
+                /*if (day1!=null){
+                    final TextView txtPlace = new TextView(PlanActivity2.this);
+                    txtPlace.setText(day1.get(0));
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+                    lp.setMargins(10,10,10,10);
+                    txtPlace.setLayoutParams(lp);
+                    container.addView(txtPlace);
+                }*/
                 final TextView txtPlace = new TextView(PlanActivity2.this);
                 txtPlace.setText(title);
 
@@ -185,6 +194,10 @@ public class PlanActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan2);
+        Intent intentL = getIntent();
+        day1 = intentL.getStringArrayListExtra("Day1");
+        System.out.println("planActivity2, Day1: "+day1);
+
         //툴바
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -232,6 +245,25 @@ public class PlanActivity2 extends AppCompatActivity {
         }
         adapter = new DayAdapter(PlanActivity2.this,list); //,sublist => Memo가 필요없어짐
         adapter.setInfo(user,place);
+        //9/21 day1 추가
+        /*Intent intentL = getIntent();
+        day1 = intentL.getStringArrayListExtra("Day1");
+        System.out.println("planActivity2, Day1: "+day1);
+
+        if (day1!=null){
+            //container = adapter.getContainer(0);
+            final TextView txtPlace = new TextView(PlanActivity2.this);
+            txtPlace.setText(day1.get(0));
+
+            txtPlace.setPadding(10,10,10,10);
+            txtPlace.setBackgroundResource(R.drawable.txt_custom);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+            lp.setMargins(10,10,10,10);
+            txtPlace.setLayoutParams(lp);
+            container.addView(txtPlace);
+
+        }
+        //여까지*/
         recyclerView.setAdapter(adapter);
 
         //8/24 수정

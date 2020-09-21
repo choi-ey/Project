@@ -35,11 +35,14 @@ public class PlanList extends AppCompatActivity {
 
     ArrayList cPlace = null;
 
+    String mEmail;
+
     private int year;
     private int sDate;
     private int eDate;
     private int month;
     private String place;
+    ArrayList<String> day1 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class PlanList extends AppCompatActivity {
         list = new ArrayList<Plan>();
 
         Intent intent = getIntent();
-        final String mEmail = intent.getExtras().getString("user");
+        mEmail = intent.getExtras().getString("user");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Plan").document(mEmail);
@@ -86,6 +89,9 @@ public class PlanList extends AppCompatActivity {
                             month  = ((Long) hashPlan.get("month")).intValue();
                             sDate  =  ((Long) hashPlan.get("sDate")).intValue();
                             eDate  = ((Long) hashPlan.get("eDate")).intValue();
+                            //이런식으로 day1,2,3 ,,, 하나씩 받아와야함
+                            day1 = (ArrayList<String>) hashPlan.get("Day1");
+                            System.out.println(day1);
 
                             plan = new Plan();
                             plan.setPlace(place);
@@ -93,7 +99,10 @@ public class PlanList extends AppCompatActivity {
                             plan.setMonth(month);
                             plan.setsDate(sDate);
                             plan.seteDate(eDate);
+                            plan.setDay1(day1);
                             list.add(plan);
+
+                            System.out.println("planlist: "+hashPlan);
                         }
 
 
@@ -101,55 +110,29 @@ public class PlanList extends AppCompatActivity {
                         //adapter.setInfo(user,place);
                         planlist_re.setAdapter(adapter);
 
+                        //아이템 클릭 리스너
                         adapter.setOnItemClickListener(new OnPlanItemClickListener() {
                             @Override
                             public void onItemClick(PlanListAdapter.ViewHolder holder, View view, int position) {
                                 //Toast.makeText(PlanList.this,position,Toast.LENGTH_SHORT).show();//얜왜안돼
-                                System.out.println("포지션은: "+position);
+
+                                Plan plan = list.get(position);
+                                //System.out.println("포지션은: "+position+"장소는: "+plan.place);//확인OK
+                                String date = plan.year+"/"+plan.month+"/"+plan.sDate+" - "+plan.year+"/"+plan.month+"/"+plan.eDate;
+                                Intent intent = new Intent(PlanList.this,PlanActivity2.class);
+                                intent.putExtra("place",plan.place);
+                                intent.putExtra("year",plan.year);
+                                intent.putExtra("date",date);
+                                intent.putExtra("month", plan.month);
+                                intent.putExtra("sDate",plan.sDate);
+                                intent.putExtra("eDate",plan.eDate);
+                                intent.putExtra("user",mEmail);
+                                if(day1!=null){
+                                    intent.putStringArrayListExtra("Day1",plan.day1);
+                                }
+                                startActivity(intent);
                             }
-                        });
-
-
-
-                       // System.out.println(hashPlan);
-
-
-                        //wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
-                       /* wishList= (ArrayList)document.getData().get("WishList");
-                        size = wishList.size();
-                        for (int i = 0; i< size; i++){
-                            HashMap map = (HashMap) wishList.get(i);
-                            addr1s.add(map.get("addr1").toString());
-                            titles.add(map.get("title").toString());
-                            firstImages.add(map.get("firstImage").toString());
-                            mapxs.add(map.get("mapx").toString());
-                            mapys.add(map.get("mapy").toString());
-                            checks.add((Boolean) map.get("selected"));
-                            tour = new TourApi();
-                            tour.setAddr1(addr1s.get(i));
-                            tour.setFirstImage(firstImages.get(i));
-                            tour.setMapx(mapxs.get(i));
-                            tour.setMapy(mapys.get(i));
-                            tour.setTitle(titles.get(i));
-                            tour.setSelected(checks.get(i));
-                            list.add(tour);
-                        }
-                        System.out.println(tour.isSelected()+"wishList");
-                        adapter = new TourApiAdapter(WishList.this,list);
-                        wishRecycler.setAdapter(adapter);
-                        adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
-                            @Override
-                            public void OnItemClick(TourApiAdapter.ViewHolder holder, View view, int position) {
-                                System.out.println(position+"  wish");
-                                holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                    @Override
-                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                        tour.setSelected(isChecked);
-                                        System.out.println("위시에서 바뀜");
-                                    }
-                                });
-                            }
-                        });*/
+                        }); //아이템 클릭리스너
 
                     } else { }
                 } else { }
@@ -173,7 +156,7 @@ public class PlanList extends AppCompatActivity {
         plan.seteDate(30);
         list.add(plan);*/
         //test
-
+/*
         adapter = new PlanListAdapter(PlanList.this,list);
         //adapter.setInfo(user,place);
         planlist_re.setAdapter(adapter);
@@ -185,6 +168,6 @@ public class PlanList extends AppCompatActivity {
                 //Toast.makeText(PlanList.this,position,Toast.LENGTH_SHORT).show();//얜왜안돼
                 System.out.println("포지션은: "+position);
             }
-        });
+        });*/
     }
 }

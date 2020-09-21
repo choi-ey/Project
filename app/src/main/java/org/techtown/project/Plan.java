@@ -1,11 +1,22 @@
 package org.techtown.project;
 
+import java.util.ArrayList;
+
 public class Plan {
     String place;
     int year;
     int month;
     int sDate;
     int eDate;
+    ArrayList<String> day1 = new ArrayList<>();
+
+    public ArrayList<String> getDay1() {
+        return day1;
+    }
+
+    public void setDay1(ArrayList<String> day1) {
+        this.day1 = day1;
+    }
 
     public String getPlace() {
         return place;

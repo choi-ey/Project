@@ -108,7 +108,7 @@ public class WishList extends AppCompatActivity {
                             tour.setSelected(checks.get(i));
                             list.add(tour);
                         }
-                        System.out.println(tour.isSelected()+"wishList");
+                        //System.out.println(tour.isSelected()+"wishList");
                         adapter = new TourApiAdapter(WishList.this,list);
                         wishRecycler.setAdapter(adapter);
                         adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
@@ -126,9 +126,10 @@ public class WishList extends AppCompatActivity {
                         });
 
 
-                        if(tour.isSelected()==false){ //체크박스가 해제되면
+                        //9.21 이거 주석처리 해야 위시리스트 비어 있어도 오류안남 ///
+                        ///if(tour.isSelected()==false){ //체크박스가 해제되면
 
-                            System.out.println("wishfalse");
+                            ///System.out.println("wishfalse");
 
                           /*
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -150,7 +151,7 @@ public class WishList extends AppCompatActivity {
 
 */
 
-                        }
+                  ///      }
 
 
                     } else { }
