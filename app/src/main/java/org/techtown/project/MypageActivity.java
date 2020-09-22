@@ -165,9 +165,11 @@ public class MypageActivity extends AppCompatActivity {
                 }else{
                     switch (childPosition ){
                         case 0:
+                            //위시리스트
                             Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
-                            //Intent mywishIntent = new Intent(getApplicationContext(), MywishActivity.class);
-                            //startActivity(mywishIntent);
+                            Intent mywishIntent = new Intent(getApplicationContext(), WishList.class);
+                            mywishIntent.putExtra("user",mEmail);
+                            startActivity(mywishIntent);
                             break;
                     }
                 }

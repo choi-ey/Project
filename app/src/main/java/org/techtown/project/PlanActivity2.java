@@ -194,9 +194,9 @@ public class PlanActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan2);
-        Intent intentL = getIntent();
+        /*Intent intentL = getIntent();
         day1 = intentL.getStringArrayListExtra("Day1");
-        System.out.println("planActivity2, Day1: "+day1);
+        System.out.println("planActivity2, Day1: "+day1);*/
 
         //툴바
         toolbar = (Toolbar) findViewById(R.id.toolbar);
