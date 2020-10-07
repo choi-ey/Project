@@ -88,10 +88,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     public void setOnItemClickListener(OnDayItemClickListener listener){
         this.listener = listener;
     }
+    //PlanActivity2에서 사용
     public void setInfo(String user, String place){
         this.user=user;
         this.place=place;
-
     }
 
    public class ViewHolder extends RecyclerView.ViewHolder{ //8/24 static에서 public으로

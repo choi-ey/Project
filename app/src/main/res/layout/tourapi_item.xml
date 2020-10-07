@@ -73,7 +73,8 @@
                         android:layout_height="wrap_content"
                         android:button="@drawable/heart_outline"
                         android:focusable="false"
-                        android:clickable="false"/>
+                        android:clickable="false"
+                        />
 
                 </LinearLayout>
 

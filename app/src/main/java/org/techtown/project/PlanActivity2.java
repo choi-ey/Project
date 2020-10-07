@@ -51,6 +51,7 @@ public class PlanActivity2 extends AppCompatActivity {
     String title;
     int aPosition;
     LinearLayout container;
+    LinearLayout container2;
     //9/16추가
     FirebaseFirestore db;
     String user;
@@ -104,6 +105,7 @@ public class PlanActivity2 extends AppCompatActivity {
                     switch(pos){
                         case 0:
                             day1.add(txtPlace.getText().toString());
+                            day.setDay1(day1); //추가
                             docData.put("Day1",day1);
                             break;
                         case 1:
@@ -241,17 +243,20 @@ public class PlanActivity2 extends AppCompatActivity {
             day = new Day();
             day.setMonth(month);
             day.setDate(i);
+
             list.add(day);
         }
         adapter = new DayAdapter(PlanActivity2.this,list); //,sublist => Memo가 필요없어짐
         adapter.setInfo(user,place);
         //9/21 day1 추가
-        /*Intent intentL = getIntent();
-        day1 = intentL.getStringArrayListExtra("Day1");
-        System.out.println("planActivity2, Day1: "+day1);
+       /* Intent intentL = getIntent();
+
 
         if (day1!=null){
             //container = adapter.getContainer(0);
+            int pos = aPosition;
+            day1 = intentL.getStringArrayListExtra("Day1");
+            System.out.println("planActivity2, Day1: "+day1);
             final TextView txtPlace = new TextView(PlanActivity2.this);
             txtPlace.setText(day1.get(0));
 
@@ -260,6 +265,7 @@ public class PlanActivity2 extends AppCompatActivity {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
             lp.setMargins(10,10,10,10);
             txtPlace.setLayoutParams(lp);
+            container = adapter.getContainer(pos);
             container.addView(txtPlace);
 
         }

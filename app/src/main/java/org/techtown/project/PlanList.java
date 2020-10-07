@@ -91,7 +91,7 @@ public class PlanList extends AppCompatActivity {
                             eDate  = ((Long) hashPlan.get("eDate")).intValue();
                             //이런식으로 day1,2,3 ,,, 하나씩 받아와야함
                             day1 = (ArrayList<String>) hashPlan.get("Day1");
-                            System.out.println(day1);
+                            System.out.println("day1"+day1);
 
                             plan = new Plan();
                             plan.setPlace(place);
@@ -100,6 +100,7 @@ public class PlanList extends AppCompatActivity {
                             plan.setsDate(sDate);
                             plan.seteDate(eDate);
                             plan.setDay1(day1);
+                            plan.setmEmail(mEmail); //10/4추가
                             list.add(plan);
 
                             System.out.println("planlist: "+hashPlan);
@@ -107,7 +108,7 @@ public class PlanList extends AppCompatActivity {
 
 
                         adapter = new PlanListAdapter(PlanList.this,list);
-                        //adapter.setInfo(user,place);
+                        //adapter.setInfo(mEmail,place); //사용 10/4 user=>mEmail 없어도 될듯
                         planlist_re.setAdapter(adapter);
 
                         //아이템 클릭 리스너

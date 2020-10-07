@@ -3,6 +3,7 @@ package org.techtown.project;
 import java.util.ArrayList;
 
 public class Plan {
+    String mEmail; //10/4추가
     String place;
     int year;
     int month;
@@ -16,6 +17,15 @@ public class Plan {
 
     public void setDay1(ArrayList<String> day1) {
         this.day1 = day1;
+    }
+
+    //planList에서 삭제 위해
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
     }
 
     public String getPlace() {

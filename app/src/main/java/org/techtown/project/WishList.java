@@ -89,8 +89,9 @@ public class WishList extends AppCompatActivity {
                     if (document != null) { //User -> 해당 email 문서가 있으면
                         //wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
                         wishList= (ArrayList)document.getData().get("WishList");
-                        System.out.println(wishList); //9.20 확인용
+                        System.out.println("위시액티에서:"+wishList); //9.20 확인용
                         size = wishList.size();
+                        System.out.println("위시액티에서:"+size); //10/4 어댑터 바꾸면(콘솔용) 여기까진 되는데 다음부턴 안됨
                         for (int i = 0; i< size; i++){
                             HashMap map = (HashMap) wishList.get(i);
                             addr1s.add(map.get("addr1").toString());
@@ -113,17 +114,41 @@ public class WishList extends AppCompatActivity {
                         wishRecycler.setAdapter(adapter);
                         adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
                             @Override
-                            public void OnItemClick(TourApiAdapter.ViewHolder holder, View view, int position) {
+                            public void OnItemClick(TourApiAdapter.ViewHolder holder, View view, final int position) {
                                 System.out.println(position+"  wish");
-                                holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                adapter.delete(position);
+                                if (!holder.heart_check.isChecked()){
+                                    //int size = list.size();
+                                    //list.remove(position);
+                                    adapter.delete(position);
+                                    //size--;
+                                    System.out.println("위시에서 바뀜2");
+                                }
+                                //이게 아예안되는 듯
+                                /*holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         tour.setSelected(isChecked);
+                                        int size = list.size();
+                                        list.remove(position);
+                                        size--;
+                                        adapter.delete(position);
                                         System.out.println("위시에서 바뀜");
                                     }
-                                });
+                                });*/
                             }
                         });
+
+
+                        //10/4추가(삭제) -> 나중에 다시
+                        /*adapter.setOnItemClickListener(new OnTourApiItemClickListener() {
+
+                            @Override
+                            public void OnItemLongClick(TourApiAdapter.ViewHolder holder, View view, int position) {
+
+                            }
+                        });*/
+                        //10/4추가(삭제)여까지
 
 
                         //9.21 이거 주석처리 해야 위시리스트 비어 있어도 오류안남 ///

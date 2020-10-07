@@ -22,12 +22,15 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHolder> {
 
@@ -40,6 +43,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     CheckBox heart_check;
     SharedPreferences appData;
     String title;
+    //10/4추가 리스트 삭제 위해
+    FirebaseFirestore dbX;
 
 
     public TourApiAdapter(Context context,ArrayList<TourApi> items){
@@ -59,6 +64,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     public void setOnItemClickListener(OnTourApiItemClickListener listener){
         this.listener = listener;
     }
+    //MainFragment 에서 호출
     public void setEmail(String email){
         this.email=email;
         System.out.println(email+"어댑터");
@@ -98,19 +104,164 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         final String mapx = items.get(position).mapx;
         final String mapy = items.get(position).mapy;
 
-        final TourApi tourApi = items.get(position);
+        final TourApi wTourApi = items.get(position);
+        //10.4추가 콘솔
+        FirebaseFirestore db2 = FirebaseFirestore.getInstance();
+        FirebaseAuth firebaseAuth;
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        final String currentuser= user.getEmail();
+        //콘솔용으로 바꾸면 이 아래 문장 오류로 나옴,,,
+        final DocumentReference docRef2 = db2.collection("User").document(currentuser);
+
+        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) { //User -> 해당 email 문서가 있으면
+                        ArrayList<TourApi> wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                        //<TourApi> 추가 9/3
+                        if(wishList!= null){ //wishlist필드가 생성된경우
+                            ArrayList array= (ArrayList)document.getData().get("WishList");
+                            int size = wishList.size();
+                            for (int i = 0; i< size; i++){
+                                HashMap map = (HashMap) array.get(i);
+
+                                if (items.get(position).title.equals(map.get("title").toString())){
+                                    holder.heart_check.setOnCheckedChangeListener(null);
+                                    items.get(position).setSelected(true);
+                                    holder.heart_check.setChecked(items.get(position).isSelected);
+                                    holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                            //tourApi.setSelected(isChecked);
+                                            System.out.println("변경: "+isChecked);
+                                            if (isChecked){
+                                                wTourApi.setSelected(isChecked);
+                                                final ArrayList<TourApi> tList = new ArrayList<TourApi>();
+                                                TourApi tourApi = new TourApi();
+                                                tourApi.setSelected(true);
+                                                tourApi.setTitle(title);
+                                                tourApi.setAddr1(addr1);
+                                                tourApi.setFirstImage(imgURL);
+                                                tourApi.setMapx(mapx);
+                                                tourApi.setMapy(mapy);
+                                                tList.add(tourApi);
+                                                // WishList 내용을 DB에 추가
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                final DocumentReference docRef = db.collection("User").document(currentuser);
+                                                //docRef.update("WishList",tList);
+
+                                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            if (document != null) { //User -> 해당 email 문서가 있으면
+                                                                ArrayList<TourApi> wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                                                //<TourApi> 추가 9/3
+                                                                int size = wishList.size();
+                                                                if(wishList!= null){ //wishlist필드가 생성된경우
+
+                                                                    wishList.addAll(tList);
+                                                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                                                    size++;
+                                                                }
+                                                                else{//wishlist필드가 없는경우
+                                                                    docRef.update("WishList",tList);
+                                                                }
+                                                            } else { }
+                                                        } else { } }
+                                                });
+
+                                                //알림 다이얼로그
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                                builder.setTitle("추가 완료").setMessage("위시리스트에 '"+title+"'이 추가되었습니다");
+                                                builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                                AlertDialog alertDialog = builder.create();
+                                                alertDialog.show();
+
+                                            }else{ //체크박스해제하면? //t
+                                                wTourApi.setSelected(isChecked);
+
+                                                final String wTitle = wTourApi.title;
+
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                final DocumentReference docRef = db.collection("User").document(currentuser);//10/4 email에서 다바꿈
+
+                                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            if (document != null) { //User -> 해당 email 문서가 있으면
+                                                                ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
+                                                                if (wishList!= null){ //wishlist필드가 생성된경우
+                                                                    //9.18에서 이부분추가
+                                                                    int size = wishList.size();
+
+                                                                    for (int i = 0; i<size; i++){
+                                                                        HashMap map = (HashMap) wishList.get(i);
+                                                                        if(wTitle.equals(map.get("title").toString())){
+                                                                            wishList.remove(i);
+                                                                            docRef.update("WishList",wishList);
+                                                                            size--;
+                                                                        }
+                                                                    }
+                                                                    //9.18에서 이부분추가
+                                                                }
+                                                                else{//wishlist필드가 없는경우
+                                                                }
+                                                                docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+
+                                                            } else { }
+                                                        } else { } }
+                                                });
+
+                                                //알림 다이얼로그 9/14
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                                builder.setTitle("추가 취소").setMessage("위시리스트에 '"+title+"'이 삭제되었습니다");
+                                                builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                                AlertDialog alertDialog = builder.create();
+                                                alertDialog.show();
+                                            }
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        else{//wishlist필드가 없는경우
+                        }
+                    } else { }
+                } else { } }
+        });
+        //10.4추가 콘솔 여까지
         holder.heart_check.setOnCheckedChangeListener(null); //9.14 스크롤해도 하트 남아있게
-        holder.heart_check.setChecked(tourApi.isSelected());
+        holder.heart_check.setChecked(wTourApi.isSelected());
         holder.heart_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //tourApi.setSelected(isChecked);
-                System.out.println("변경: "+isChecked);
+                System.out.println("투어어댑터변경: "+isChecked);
                 /*if (!isChecked){
                     System.out.println("취소취소 ");
                 }*/
                 if (isChecked){
-                    tourApi.setSelected(isChecked);
+                    wTourApi.setSelected(isChecked);
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     TourApi tourApi = new TourApi();
                     tourApi.setSelected(true);
@@ -133,11 +284,12 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 if (document != null) { //User -> 해당 email 문서가 있으면
                                     ArrayList<TourApi> wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
                                     //<TourApi> 추가 9/3
-                                    if(wishList!= null){ //wishlist필드가 생성된경우
+                                    int size = wishList.size();
 
+                                    if(wishList!= null){ //wishlist필드가 생성된경우
                                         wishList.addAll(tList);
                                         docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
-
+                                        size++; //추가
                                     }
                                     else{//wishlist필드가 없는경우
                                         docRef.update("WishList",tList);
@@ -160,7 +312,9 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     alertDialog.show();
 
                 }else{ //체크박스해제하면?
-                    tourApi.setSelected(isChecked);
+                    wTourApi.setSelected(isChecked);
+
+                    final String wTitle = wTourApi.title;
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     final DocumentReference docRef = db.collection("User").document(email);
@@ -172,9 +326,19 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) { //User -> 해당 email 문서가 있으면
                                     ArrayList wishList= (ArrayList)document.get("WishList"); //WishList 필드값 가져와라
-                                    wishList.remove(position);
+                                    //wishList.remove(position); //이걸 바꿔야 할텐디
 
-                                    docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                    int size = wishList.size();
+
+                                    for (int i = 0; i<size; i++){
+                                        HashMap map = (HashMap) wishList.get(i);
+                                        if(wTitle.equals(map.get("title").toString())){
+                                            wishList.remove(i);
+                                            docRef.update("WishList",wishList);
+                                            size--;
+                                        }
+                                    }
+                                    //docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
                                 } else { }
                             } else { } }
                     });
@@ -338,8 +502,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     public int getItemCount() {
         return items.size();
     }
-
-    class ViewHolder extends RecyclerView.ViewHolder{
+ //static으로바뀜 롱클릭
+  class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView apiTitle;
         TextView apiAddr1;
@@ -358,7 +522,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             plusbtn = itemView.findViewById(R.id.plusbtn);
             heart_check = itemView.findViewById(R.id.heart_check);
             heart_check.setButtonDrawable(R.drawable.heart_btn);
-         /*   //9/18 콘솔하트 가져오기 시도
+      /*      //9/18 콘솔하트 가져오기 시도
             //final String str = items.get(1).title;
             final ArrayList<String> wTitles = new ArrayList<String>();
             //wTitles.add(items.get(getAdapterPosition()).title);
@@ -393,7 +557,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                             }
                         } else { }
                     } else { } }
-            });*/
+            });//여까지 10.4다시 이거아냐*/
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -406,7 +570,34 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 }
             });
 
-        }
+            //10/4 추가
+             //여까지
 
+        }
     }
+    //위시리스트에서 삭제 위해 10/4 아직 구현안함
+    public void delete(final int position){
+        try{
+            /*dbX = FirebaseFirestore.getInstance();
+            final DocumentReference docRef = dbX.collection("User").document(email);
+
+            Map<String,Object> updates = new HashMap<>();
+            updates.put(items.get(position).place, FieldValue.delete());
+            docRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    System.out.println("PlanListAdapter 삭제 성공");
+                }
+            });*/
+
+            items.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, items.size());
+            System.out.println("투어어댑터에서삭제됨");
+
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+    //여까지 아직안함
 }
