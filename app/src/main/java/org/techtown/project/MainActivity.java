@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
                                 //프래그먼트 사용시 교재 333p
                                 return true;
                             case R.id.tab_recommend:
+                                Intent intentR = new Intent(MainActivity.this, RecoActivity.class);
+                                intentR.putExtra("user",currentuser);
+                                startActivity(intentR);
                                 Toast.makeText(getApplicationContext(),"Recommend",Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.tab_favorite:

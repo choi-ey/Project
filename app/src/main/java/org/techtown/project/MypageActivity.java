@@ -149,18 +149,19 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 }else if(groupPosition == 1){
                     switch(childPosition){
+                        //추천리스트
                         case 0:
                             Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
                             //이렇게하면 툴바 이름 못바꿈...그럼 프래그먼트 이용..?
                             //아니면 Planlistactivity 정보 intent 이용해서 가져오기..?
-                            //Intent listIntent = new Intent(getApplicationContext(), PlanlistActivity.class);
-                            //startActivity(listIntent);
+                            Intent listIntent = new Intent(getApplicationContext(), RecoActivity.class);
+                            startActivity(listIntent);
                             break;
-                        case 1:
+                        /*case 1:
                             Toast.makeText(getApplicationContext(),"child_list: "+childPosition,Toast.LENGTH_LONG).show();
                             // Intent PlistIntent = new Intent(getApplicationContext(), PlanlistActivity.class);
                             // startActivity(PlistIntent);
-                            break;
+                            break;*/
                     }
                 }else{
                     switch (childPosition ){
@@ -217,13 +218,13 @@ public class MypageActivity extends AppCompatActivity {
         listChild = new ArrayList<Child>();
         child = new Child();
 
-        parent.setData("   나의여행기록");
-        child.setChildData("여행기록하기");
+        parent.setData("   나의 추천리스트");
+        child.setChildData("나의 추천리스트");
         listChild.add(child);
 
-        child = new Child();
+        /*child = new Child();
         child.setChildData("나의 지난 기록");
-        listChild.add(child);
+        listChild.add(child);*/
 
         parent.setItems(listChild);
         listParent.add(parent);
@@ -233,8 +234,8 @@ public class MypageActivity extends AppCompatActivity {
         listChild = new ArrayList<Child>();
         child = new Child();
 
-        parent.setData("   나의위시리스트");
-        child.setChildData("나의위시리스트");
+        parent.setData("   나의 위시리스트");
+        child.setChildData("나의 위시리스트");
         listChild.add(child);
 
 

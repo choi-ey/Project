@@ -2,6 +2,7 @@ package org.techtown.project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -29,7 +39,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainFragment extends Fragment {
     Spinner spinSigungu; //시군구
@@ -53,13 +65,20 @@ public class MainFragment extends Fragment {
     String email;
     //8/24
     //지우기//String title;
+    //10/17 db
+    boolean same=false;
+    DatabaseManager db;
+    //SQLiteDatabase db;
+    ArrayList<UrlList> urlLists = null;
+    UrlList url = null;
+    FirebaseFirestore listDB;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
     }
 
-    //안써도 될듯
+    //안써도 될듯->씀
     @Override
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
@@ -83,6 +102,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 MyAsyncTask myAsyncTask = new MyAsyncTask();
                 myAsyncTask.execute();
+                System.out.println("Main Search");
             }
         });
 
@@ -300,14 +320,105 @@ public class MainFragment extends Fragment {
                 e.printStackTrace();
                 System.out.println("에러다에러");
             }
-            return null;
+            urlLists = new ArrayList<UrlList>();
+            url = new UrlList();
+            url.setUrl(queryAreaUrl);
+            urlLists.add(url);
+
+            /*dm=new DatabaseManager(mContext,"urls.db",null,1);
+            db=dm.getWritableDatabase();
+            db.execSQL("DELETE FROM URLLIST WHERE url='"+queryAreaUrl+"';");
+            //db.getWritableDatabase();*/
+            db = new DatabaseManager(mContext,"urls.db",null,1);
+
+            //System.out.println(queryAreaUrl);
+            //
+            /*ArrayList<UrlList> urlLists1 = db.getItems();
+            if (urlLists1.isEmpty()) {//sqlite에 테이블이 비어있으면 url저장&firestore저장
+                db.insertData(urlLists);
+                System.out.println("없어서저장");
+                listDB = FirebaseFirestore.getInstance();
+                final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
+                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) { //DataLists -> 해당 email 문서가 있으면
+                                System.out.println("F1: 됨");
+                                ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
+                                if(DataList!= null){ //DataList 필드가 생성된경우
+                                    System.out.println("F1: 됨2");
+                                    DataList.addAll(list);
+                                    docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
+                                }else{//DataList 필드가 없는경우
+                                    System.out.println("F1: 안됨2"); //여긴데
+                                    docRef2.update("DataList",list);
+
+                                }
+                            }else{//if (document != null)
+                                System.out.println("F1: 안됨");
+                            }
+                        }else{//if (task.isSuccessful())
+                        }
+                    }
+                });
+            }else{//sqlite 비어있지않으면 sqlite에 있는 url과 현재 url비교 없으면 저장 있으면 break
+                for (UrlList entity : urlLists1){
+                    if(entity.getUrl().equals(queryAreaUrl)){
+                        same=true;
+                        break;
+                    }
+                }
+                if (!same){
+                    db.insertData(urlLists);
+                    System.out.println("달라서저장");
+                    listDB = FirebaseFirestore.getInstance();
+                    final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
+                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //DataLists -> 해당 email 문서가 있으면
+                                    System.out.println("F: 됨");
+                                    ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
+                                    if(DataList!= null){ //DataList 필드가 생성된경우
+                                        System.out.println("F: 됨2");
+                                        DataList.addAll(list);
+                                        docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
+                                        //size++;
+                                    }else{//DataList 필드가 없는경우
+                                        System.out.println("F: 안됨2"); //여긴데
+                                        docRef2.update("DataList",list);
+
+                                    }
+                                }else{//if (document != null)
+                                    //docRef2.set(email);
+                                    System.out.println("F: 안됨");
+                                }
+                            }else{//if (task.isSuccessful())
+
+                            }
+                        }
+                    });
+                }
+            }*///if (urlLists1.isEmpty()) else
+            //
+
+            ArrayList<UrlList> urlLists2 = db.getItems();
+            for (UrlList entity : urlLists2){
+                System.out.println("URLDB: "+entity.getUrl());
+            }
+
+            return null; //원래 있었니?
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            adapter = new TourApiAdapter(getContext(),list);
+            adapter = new TourApiAdapter(getContext(),list);//250줄 list = new ArrayList<TourApi>();
             adapter.setEmail(email);
             /*
             int pos =adapter.getPosition();
