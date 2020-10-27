@@ -25,12 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHolder> {
 
@@ -105,6 +103,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         final String mapy = items.get(position).mapy;
 
         final TourApi wTourApi = items.get(position);
+        final  int score = 0;
+        
         //10.4추가 콘솔
         FirebaseFirestore db2 = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth;
@@ -263,6 +263,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 if (isChecked){
                     wTourApi.setSelected(isChecked);
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
+                    int score= 3;
                     TourApi tourApi = new TourApi();
                     tourApi.setSelected(true);
                     tourApi.setTitle(title);
@@ -270,13 +271,16 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     tourApi.setFirstImage(imgURL);
                     tourApi.setMapx(mapx);
                     tourApi.setMapy(mapy);
+                    tourApi.setScore(score);
                     tList.add(tourApi);
                     // WishList 내용을 DB에 추가
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    final DocumentReference docRef = db.collection("User").document(email);
+                    final DocumentReference docRef1 = db.collection("User").document(email);
+                    final DocumentReference docRef3 = db.collection("DATA").document(email);
                     //docRef.update("WishList",tList);
 
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    //firebase: wishlist에 추가
+                    docRef1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
@@ -288,15 +292,41 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
                                     if(wishList!= null){ //wishlist필드가 생성된경우
                                         wishList.addAll(tList);
-                                        docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
+                                        docRef1.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
                                         size++; //추가
                                     }
                                     else{//wishlist필드가 없는경우
-                                        docRef.update("WishList",tList);
+                                        docRef1.update("WishList",tList);
                                     }
                                 } else { }
                             } else { } }
                     });
+
+                    // 10/21 firebase: wishlist에 추가한 것을 DATA에 추가
+                    docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
+                                    //<TourApi> 추가 9/3
+                                    //int size = mydata.size();
+
+                                    //score 값 바꿔줄 작업이 필요
+
+                                    if(mydata!= null){ //data 필드가 생성된경우
+                                        mydata.addAll(tList);
+                                        docRef3.update("data",mydata);
+                                        //size++; //추가
+                                    }
+                                    else{//wishlist필드가 없는경우
+                                        docRef3.update("data",tList);
+                                    }
+                                } else { }
+                            } else { } }
+                    });
+
 
                     //알림 다이얼로그
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -381,6 +411,44 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
             public void onClick(View v) {
                 Toast.makeText(mContext,title,Toast.LENGTH_SHORT).show();
                 ((MainActivity)mContext).setString(title);
+
+                final ArrayList<TourApi> tList = new ArrayList<TourApi>();
+                int score= 5;
+                TourApi tourApi = new TourApi();
+                tourApi.setSelected(true);
+                tourApi.setTitle(title);
+                tourApi.setAddr1(addr1);
+                tourApi.setFirstImage(imgURL);
+                tourApi.setMapx(mapx);
+                tourApi.setMapy(mapy);
+                tourApi.setScore(score);
+                tList.add(tourApi);
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final DocumentReference docRef3 = db.collection("DATA").document(email);
+
+                docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) { //User -> 해당 email 문서가 있으면
+                                ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //WishList 필드값 가져와라
+                                //<TourApi> 추가 9/3
+                                //int size = mydata.size();
+
+                                if(mydata!= null){ //data 필드가 생성된경우
+                                    mydata.addAll(tList);
+                                    docRef3.update("data",mydata);
+                                    //size++; //추가
+                                }
+                                else{//wishlist필드가 없는경우
+                                    docRef3.update("data",tList);
+                                }
+                            } else { }
+                        } else { } }
+                });
+
                 //지우기 여기부터
                 //Intent main = new Intent(mContext,MainActivity.class);
                 //main.putExtra("title",title);
@@ -393,6 +461,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 //((Activity)mContext).startActivityForResult(plan2,1);
                 //System.out.println(title+"apiadapter");
                 //여기까지
+
+
             }
         });
         //추가 하트박스 이거없으면 하트 누르면 전체 누른것으로 인식

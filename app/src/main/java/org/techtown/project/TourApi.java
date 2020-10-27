@@ -10,6 +10,8 @@ public class TourApi implements Serializable {
     String mapy;
     //9/4 하트박스 추가
     boolean isSelected;
+    //10/21 score 추가
+    int score;
 
     public boolean isSelected() {
         return isSelected;
@@ -59,4 +61,8 @@ public class TourApi implements Serializable {
     public void setFirstImage(String firstImage) {
         this.firstImage = firstImage;
     }
+
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score= score; }
+
 }
