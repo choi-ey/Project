@@ -420,9 +420,7 @@ public class MainFragment extends Fragment {
                     }
                 }
             });
-            //
-
-
+            //커밋
             return null; //원래 있었니?
         }
 
