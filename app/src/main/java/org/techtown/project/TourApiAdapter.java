@@ -103,8 +103,9 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         final String mapy = items.get(position).mapy;
 
         final TourApi wTourApi = items.get(position);
-        final  int score = 0;
-        
+        final String wTitle = wTourApi.title;
+        final int score = 0;
+
         //10.4추가 콘솔
         FirebaseFirestore db2 = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth;
@@ -264,7 +265,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                     wTourApi.setSelected(isChecked);
                     final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     int score= 3;
-                    TourApi tourApi = new TourApi();
+                    final TourApi tourApi = new TourApi();
                     tourApi.setSelected(true);
                     tourApi.setTitle(title);
                     tourApi.setAddr1(addr1);
@@ -309,11 +310,23 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) { //User -> 해당 email 문서가 있으면
-                                    ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
+                                    ArrayList mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
                                     //<TourApi> 추가 9/3
-                                    //int size = mydata.size();
 
-                                    //score 값 바꿔줄 작업이 필요
+                                    int size = mydata.size();
+
+                                    //이 for문 미완성
+                                    for (int i = 0; i<size; i++){
+                                        HashMap map = (HashMap) mydata.get(i);
+                                        if(wTitle.equals(map.get("title").toString())){
+                                           //타이틀 같으면 score꺼내와서 score update
+                                            int updatesc= (int) map.get("score");
+                                            updatesc=updatesc+3;
+                                            wTourApi.setScore(updatesc);
+                                            docRef3.update("data",mydata);
+                                        }
+                                    }
+
 
                                     if(mydata!= null){ //data 필드가 생성된경우
                                         mydata.addAll(tList);
@@ -344,7 +357,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 }else{ //체크박스해제하면?
                     wTourApi.setSelected(isChecked);
 
-                    final String wTitle = wTourApi.title;
+
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     final DocumentReference docRef = db.collection("User").document(email);
@@ -360,13 +373,13 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
 
                                     int size = wishList.size();
 
-                                    for (int i = 0; i<size; i++){
-                                        HashMap map = (HashMap) wishList.get(i);
-                                        if(wTitle.equals(map.get("title").toString())){
-                                            wishList.remove(i);
-                                            docRef.update("WishList",wishList);
-                                            size--;
-                                        }
+                                        for (int i = 0; i<size; i++){
+                                            HashMap map = (HashMap) wishList.get(i);
+                                            if(wTitle.equals(map.get("title").toString())){
+                                                wishList.remove(i);
+                                                docRef.update("WishList",wishList);
+                                                size--;
+                                            }
                                     }
                                     //docRef.update("WishList",wishList); //WishList 에 tlist 넣어서 문서 업데이트
                                 } else { }

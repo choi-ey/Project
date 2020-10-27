@@ -2,7 +2,6 @@ package org.techtown.project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -22,12 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -41,7 +36,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainFragment extends Fragment {
     Spinner spinSigungu; //시군구
@@ -420,7 +414,7 @@ public class MainFragment extends Fragment {
                     }
                 }
             });
-            //커밋
+            //커밋22
             return null; //원래 있었니?
         }
 
@@ -443,7 +437,43 @@ public class MainFragment extends Fragment {
                     tour = adapter.getItem(position);
                     //확인 => OK
                     //Toast.makeText(MainActivity.this,position+"선택"+tour.getTitle(),Toast.LENGTH_SHORT).show();
+                    final ArrayList<TourApi> tList = new ArrayList<TourApi>();
                     naverSearch = tour.getTitle(); //naver 검색위해
+                    tour.getAddr1();
+                    tour.isSelected();
+                    tour.getMapx();
+                    tour.getMapy();
+                    tour.getFirstImage();
+                    tour.setScore(1);
+                    tList.add(tour);
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    final DocumentReference docRef3 = db.collection("DATA").document(email);
+
+                    // 10/27 firebase: 네이버검색한 내용을 DATA에 추가
+                    docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) { //User -> 해당 email 문서가 있으면
+                                    ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
+                                    //<TourApi> 추가 9/3
+                                    //int size = mydata.size();
+
+                                    if(mydata!= null){ //data 필드가 생성된경우
+                                        mydata.addAll(tList);
+                                        docRef3.update("data",mydata);
+                                        //size++; //추가
+                                    }
+                                    else{//data 필드가 생성된경우
+                                        docRef3.update("data",tList);
+                                    }
+                                } else { }
+                            } else { } }
+                    });
+
+
                     //System.out.println(naverSearch);
                     Thread thread = new Thread(new Runnable() {
                         @Override
