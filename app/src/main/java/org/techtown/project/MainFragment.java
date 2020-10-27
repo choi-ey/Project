@@ -72,6 +72,7 @@ public class MainFragment extends Fragment {
     ArrayList<UrlList> urlLists = null;
     UrlList url = null;
     FirebaseFirestore listDB;
+    FirebaseFirestore urlListDB;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -240,7 +241,7 @@ public class MainFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            String queryAreaUrl = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey="+key
+            final String queryAreaUrl = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey="+key
                     + "&areaCode=" + 1
                     +"&sigunguCode="+sigunguCode
                     +"&contentTypeId="+contentTypeId
@@ -324,92 +325,103 @@ public class MainFragment extends Fragment {
             url = new UrlList();
             url.setUrl(queryAreaUrl);
             urlLists.add(url);
-
-            /*dm=new DatabaseManager(mContext,"urls.db",null,1);
-            db=dm.getWritableDatabase();
-            db.execSQL("DELETE FROM URLLIST WHERE url='"+queryAreaUrl+"';");
-            //db.getWritableDatabase();*/
-            db = new DatabaseManager(mContext,"urls.db",null,1);
-
-            //System.out.println(queryAreaUrl);
             //
-            /*ArrayList<UrlList> urlLists1 = db.getItems();
-            if (urlLists1.isEmpty()) {//sqlite에 테이블이 비어있으면 url저장&firestore저장
-                db.insertData(urlLists);
-                System.out.println("없어서저장");
-                listDB = FirebaseFirestore.getInstance();
-                final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
-                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot document = task.getResult();
-                            if (document != null) { //DataLists -> 해당 email 문서가 있으면
-                                System.out.println("F1: 됨");
-                                ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
-                                if(DataList!= null){ //DataList 필드가 생성된경우
-                                    System.out.println("F1: 됨2");
-                                    DataList.addAll(list);
-                                    docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
-                                }else{//DataList 필드가 없는경우
-                                    System.out.println("F1: 안됨2"); //여긴데
-                                    docRef2.update("DataList",list);
+            urlListDB = FirebaseFirestore.getInstance();
+            final DocumentReference docRef2 = urlListDB.collection("UrlLists").document("alswl6709@gmail.com");
+            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            System.out.println("U1: UrlList 불러옴");
+                            ArrayList urlList= (ArrayList)document.get("UrlList");
 
-                                }
-                            }else{//if (document != null)
-                                System.out.println("F1: 안됨");
-                            }
-                        }else{//if (task.isSuccessful())
-                        }
-                    }
-                });
-            }else{//sqlite 비어있지않으면 sqlite에 있는 url과 현재 url비교 없으면 저장 있으면 break
-                for (UrlList entity : urlLists1){
-                    if(entity.getUrl().equals(queryAreaUrl)){
-                        same=true;
-                        break;
-                    }
-                }
-                if (!same){
-                    db.insertData(urlLists);
-                    System.out.println("달라서저장");
-                    listDB = FirebaseFirestore.getInstance();
-                    final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
-                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
-                                DocumentSnapshot document = task.getResult();
-                                if (document != null) { //DataLists -> 해당 email 문서가 있으면
-                                    System.out.println("F: 됨");
-                                    ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
-                                    if(DataList!= null){ //DataList 필드가 생성된경우
-                                        System.out.println("F: 됨2");
-                                        DataList.addAll(list);
-                                        docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
-                                        //size++;
-                                    }else{//DataList 필드가 없는경우
-                                        System.out.println("F: 안됨2"); //여긴데
-                                        docRef2.update("DataList",list);
-
+                            if(urlList!= null){ //UrlList 필드가 생성된경우
+                                System.out.println("U1: url 비교");
+                                int uSize=urlList.size();
+                                for (int i = 0; i<uSize; i++){
+                                    HashMap map = (HashMap) urlList.get(i);
+                                    if(queryAreaUrl.equals(map.get("url").toString())){
+                                        same=true;
+                                        break;
                                     }
-                                }else{//if (document != null)
-                                    //docRef2.set(email);
-                                    System.out.println("F: 안됨");
+                                    System.out.println("U1: url 비교후 있어서 저장X");
                                 }
-                            }else{//if (task.isSuccessful())
+                                if (!same){
+                                    System.out.println("U1: url 비교후 없어서 저장");
+                                    urlList.addAll(urlLists);
+                                    docRef2.update("UrlList",urlList);
+                                    uSize++;
+                                    //DataLists
+                                    listDB = FirebaseFirestore.getInstance();
+                                    final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
+                                    docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document != null) { //DataLists -> 해당 email 문서가 있으면
+                                                    System.out.println("F: 됨");
+                                                    ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
+                                                    if(DataList!= null){ //DataList 필드가 생성된경우
+                                                        System.out.println("F: 됨2");
+                                                        DataList.addAll(list);
+                                                        docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
+                                                    }else{//DataList 필드가 없는경우
+                                                        System.out.println("F: 안됨2"); //여긴데
+                                                        docRef2.update("DataList",list);
+                                                    }
+                                                }else{//if (document != null)
+                                                    System.out.println("F: 안됨");
+                                                }
+                                            }else{
+                                            }
+                                        }
+                                    });
+                                    //저장
+                                }
+                            }else{//UrlList 필드가 없는경우
+                                System.out.println("U1: UrlList 필드가 없는경우");
+                                docRef2.update("UrlList",urlLists);
+                                //DataLists
+                                listDB = FirebaseFirestore.getInstance();
+                                final DocumentReference docRef2 = listDB.collection("DataLists").document("alswl6709@gmail.com");
+                                docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document != null) { //DataLists -> 해당 email 문서가 있으면
+                                                System.out.println("F1: 됨");
+                                                ArrayList<TourApi> DataList= (ArrayList)document.get("DataList"); //DataList 필드값 가져와라
+                                                if(DataList!= null){ //DataList 필드가 생성된경우
+                                                    System.out.println("F1: 됨2");
+                                                    DataList.addAll(list);
+                                                    docRef2.update("DataList",DataList); //WishList 에 tlist 넣어서 문서 업데이트
+                                                }else{//DataList 필드가 없는경우
+                                                    System.out.println("F1: 안됨2"); //여긴데
+                                                    docRef2.update("DataList",list);
 
+                                                }
+                                            }else{//if (document != null)
+                                                System.out.println("F1: 안됨");
+                                            }
+                                        }else{//if (task.isSuccessful())
+                                        }
+                                    }
+                                });
+                                //DataLists 저장
                             }
+                        }else{//if (document != null)
+                            System.out.println("U1: 안됨");
                         }
-                    });
+                    }else{//if (task.isSuccessful())
+                    }
                 }
-            }*///if (urlLists1.isEmpty()) else
+            });
             //
 
-            ArrayList<UrlList> urlLists2 = db.getItems();
-            for (UrlList entity : urlLists2){
-                System.out.println("URLDB: "+entity.getUrl());
-            }
 
             return null; //원래 있었니?
         }
