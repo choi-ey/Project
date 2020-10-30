@@ -41,6 +41,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
     CheckBox heart_check;
     SharedPreferences appData;
     String title;
+    boolean same=false;
     //10/4추가 리스트 삭제 위해
     FirebaseFirestore dbX;
 
@@ -103,8 +104,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
         final String mapy = items.get(position).mapy;
 
         final TourApi wTourApi = items.get(position);
-        final String wTitle = wTourApi.title;
-        final int score = 0;
+        final String wTitle2 = wTourApi.title;
 
         //10.4추가 콘솔
         FirebaseFirestore db2 = FirebaseFirestore.getInstance();
@@ -303,6 +303,8 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                             } else { } }
                     });
 
+
+
                     // 10/21 firebase: wishlist에 추가한 것을 DATA에 추가
                     docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -312,31 +314,41 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                                 if (document != null) { //User -> 해당 email 문서가 있으면
                                     ArrayList mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
                                     //<TourApi> 추가 9/3
+                                    if(mydata!=null) {
+                                        int size = mydata.size();
 
-                                    int size = mydata.size();
+                                        for (int i = 0; i<size; i++) {
+                                            HashMap map = (HashMap) mydata.get(i);
+                                            if (wTitle2.equals(map.get("title").toString())) {
+                                                //타이틀 같으면 score꺼내와서 score update
+                                                int updatesc = (Integer.parseInt(map.get("score").toString()));
+                                                //System.out.println(updatesc);
+                                                updatesc = updatesc + 3;
 
-                                    //이 for문 미완성
-                                    for (int i = 0; i<size; i++){
-                                        HashMap map = (HashMap) mydata.get(i);
-                                        if(wTitle.equals(map.get("title").toString())){
-                                           //타이틀 같으면 score꺼내와서 score update
-                                            int updatesc= (int) map.get("score");
-                                            updatesc=updatesc+3;
-                                            wTourApi.setScore(updatesc);
-                                            docRef3.update("data",mydata);
+                                                mydata.remove(i);
+
+                                                wTourApi.setScore(updatesc);
+                                                mydata.add(wTourApi);
+                                                docRef3.update("data", mydata);
+                                                same = true;
+                                                System.out.println("여기니..22");
+                                                break;
+                                            }
+                                        }
+                                        if(!same){
+                                            System.out.println("여기니..");
+                                            wTourApi.setScore(3);
+                                            mydata.add(wTourApi);
+                                            docRef3.update("data", mydata);
+                                            size++;
                                         }
                                     }
-
-
-                                    if(mydata!= null){ //data 필드가 생성된경우
-                                        mydata.addAll(tList);
-                                        docRef3.update("data",mydata);
-                                        //size++; //추가
-                                    }
-                                    else{//wishlist필드가 없는경우
+                                    else{
+                                        System.out.println("여기니..333");
                                         docRef3.update("data",tList);
                                     }
-                                } else { }
+                                } else {
+                                }
                             } else { } }
                     });
 
@@ -357,7 +369,7 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 }else{ //체크박스해제하면?
                     wTourApi.setSelected(isChecked);
 
-
+                    final String wTitle = wTourApi.title;
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     final DocumentReference docRef = db.collection("User").document(email);
@@ -440,27 +452,51 @@ public class TourApiAdapter extends RecyclerView.Adapter<TourApiAdapter.ViewHold
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 final DocumentReference docRef3 = db.collection("DATA").document(email);
 
+                // 10/21 firebase: 일정에 추가한 것을 DATA에 추가
                 docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) { //User -> 해당 email 문서가 있으면
-                                ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //WishList 필드값 가져와라
+                                ArrayList mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
                                 //<TourApi> 추가 9/3
-                                //int size = mydata.size();
+                                if(mydata!=null) {
+                                    int size = mydata.size();
 
-                                if(mydata!= null){ //data 필드가 생성된경우
-                                    mydata.addAll(tList);
-                                    docRef3.update("data",mydata);
-                                    //size++; //추가
+                                    for (int i = 0; i<size; i++) {
+                                        HashMap map = (HashMap) mydata.get(i);
+                                        if (wTitle2.equals(map.get("title").toString())) {
+                                            //타이틀 같으면 score꺼내와서 score update
+                                            int updatesc = (Integer.parseInt(map.get("score").toString()));
+                                            //System.out.println(updatesc);
+                                            updatesc = updatesc + 5;
+
+                                            mydata.remove(i);
+
+                                            wTourApi.setScore(updatesc);
+                                            mydata.add(wTourApi);
+                                            docRef3.update("data", mydata);
+                                            same = true;
+                                            System.out.println("여기니..22");
+                                            break;
+                                        }
+                                    }
+                                    if(!same){
+                                        wTourApi.setScore(5);
+                                        mydata.add(wTourApi);
+                                        docRef3.update("data", mydata);
+                                        size++;
+                                    }
                                 }
-                                else{//wishlist필드가 없는경우
+                                else{
                                     docRef3.update("data",tList);
                                 }
-                            } else { }
+                            } else {
+                            }
                         } else { } }
                 });
+
 
                 //지우기 여기부터
                 //Intent main = new Intent(mContext,MainActivity.class);

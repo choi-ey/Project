@@ -457,19 +457,42 @@ public class MainFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) { //User -> 해당 email 문서가 있으면
-                                    ArrayList<TourApi> mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
+                                    ArrayList mydata= (ArrayList)document.get("data"); //data 필드값 가져와라
                                     //<TourApi> 추가 9/3
-                                    //int size = mydata.size();
+                                    if(mydata!=null) {
+                                        int size = mydata.size();
 
-                                    if(mydata!= null){ //data 필드가 생성된경우
+                                        for (int i = 0; i<size; i++) {
+                                            HashMap map = (HashMap) mydata.get(i);
+                                            if (naverSearch.equals(map.get("title").toString())) {
+                                                //타이틀 같으면 score꺼내와서 score update
+                                                int updatesc = (Integer.parseInt(map.get("score").toString()));
+                                                //System.out.println(updatesc);
+                                                updatesc = updatesc + 1;
+
+                                                mydata.remove(i);
+
+                                                tour.setScore(updatesc);
+                                                mydata.add(tour);
+                                                docRef3.update("data", mydata);
+                                                same = true;
+                                                System.out.println("여기니..22");
+                                                break;
+                                            }
+                                        }
+                                        if(!same){ //이아이가 문제입니다,,,,추가가되지않아요,,,,
+                                        tour.setScore(1);
                                         mydata.addAll(tList);
-                                        docRef3.update("data",mydata);
-                                        //size++; //추가
+                                        System.out.println(tour+"22222222");
+                                        docRef3.update("data", mydata);
+                                        size++;
                                     }
-                                    else{//data 필드가 생성된경우
+                                }
+                                    else{
                                         docRef3.update("data",tList);
                                     }
-                                } else { }
+                                } else {
+                                }
                             } else { } }
                     });
 
